@@ -1,4 +1,5 @@
-/* Copyright (C) 2004 Thomas N. Valine
+/*
+ * Copyright (C) 2004 Thomas N. Valine
  * tvaline@users.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or
@@ -8,17 +9,19 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA. */
+ * 02111-1307, USA.
+ */
 
 package com.ohrasys.cad.gds;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 /**
  * This class represents a generic GDSII stream record.  A stream record is a
@@ -47,678 +50,691 @@ import java.io.*;
  * @since    1.5
  */
 public class GDSRecord {
-  /**
-   * Indicates a record has no data associated with it.  Records with this
-   * datatype should have a record size of 4 bytes.
-   */
-  public static final byte NO_DATA_TYPE = 0x00;
 
-  /** Indicates that record data is a two byte bit array. */
-  public static final byte BIT_ARRAY_TYPE = 0x01;
+    /**
+     * Indicates a record has no data associated with it.  Records with this
+     * datatype should have a record size of 4 bytes.
+     */
+    public static final byte NO_DATA_TYPE = 0x00;
 
-  /** Indicates the record data type is two byte signed integer. */
-  public static final byte SHORT_TYPE = 0x02;
+    /** Indicates that record data is a two byte bit array. */
+    public static final byte BIT_ARRAY_TYPE = 0x01;
 
-  /** Indicates the record data type is four byte signed integer. */
-  public static final byte INT_TYPE = 0x03;
+    /** Indicates the record data type is two byte signed integer. */
+    public static final byte SHORT_TYPE = 0x02;
 
-  /** Indicates the record data is four byte floating point. */
-  public static final byte FLOAT_TYPE = 0x04;
+    /** Indicates the record data type is four byte signed integer. */
+    public static final byte INT_TYPE = 0x03;
 
-  /** Indicates the record data is eight byte floating point. */
-  public static final byte DOUBLE_TYPE = 0x05;
+    /** Indicates the record data is four byte floating point. */
+    public static final byte FLOAT_TYPE = 0x04;
 
-  /**
-   * Indicates the record data is ASCII string data.  If the string contains an
-   * odd number of characters, a null character is appended.  The record byte
-   * count includes this null character.
-   */
-  public static final byte STRING_TYPE = 0x06;
+    /** Indicates the record data is eight byte floating point. */
+    public static final byte DOUBLE_TYPE = 0x05;
 
-  /** NULL record type */
-  public static final byte NULL = -0x01;
+    /**
+     * Indicates the record data is ASCII string data.  If the string contains an
+     * odd number of characters, a null character is appended.  The record byte
+     * count includes this null character.
+     */
+    public static final byte STRING_TYPE = 0x06;
 
-  /** HEADER record type */
-  public static final byte HEADER = 0x00;
+    /** NULL record type */
+    public static final byte NULL = -0x01;
 
-  /** BGNLIB record type */
-  public static final byte BGNLIB = 0x01;
+    /** HEADER record type */
+    public static final byte HEADER = 0x00;
 
-  /** LIBNAME record type */
-  public static final byte LIBNAME = 0x02;
+    /** BGNLIB record type */
+    public static final byte BGNLIB = 0x01;
 
-  /** UNITS record type */
-  public static final byte UNITS = 0x03;
+    /** LIBNAME record type */
+    public static final byte LIBNAME = 0x02;
 
-  /** ENDLIB record type */
-  public static final byte ENDLIB = 0x04;
+    /** UNITS record type */
+    public static final byte UNITS = 0x03;
 
-  /** BGNSTR record type */
-  public static final byte BGNSTR = 0x05;
+    /** ENDLIB record type */
+    public static final byte ENDLIB = 0x04;
 
-  /** STRNAME record type */
-  public static final byte STRNAME = 0x06;
+    /** BGNSTR record type */
+    public static final byte BGNSTR = 0x05;
 
-  /** ENDSTR record type */
-  public static final byte ENDSTR = 0x07;
+    /** STRNAME record type */
+    public static final byte STRNAME = 0x06;
 
-  /** BOUNDARY record type */
-  public static final byte BOUNDARY = 0x08;
+    /** ENDSTR record type */
+    public static final byte ENDSTR = 0x07;
 
-  /** PATH record type */
-  public static final byte PATH = 0x09;
+    /** BOUNDARY record type */
+    public static final byte BOUNDARY = 0x08;
 
-  /** SREF record type */
-  public static final byte SREF = 0x0A;
+    /** PATH record type */
+    public static final byte PATH = 0x09;
 
-  /** AREF record type */
-  public static final byte AREF = 0x0B;
+    /** SREF record type */
+    public static final byte SREF = 0x0A;
 
-  /** TEXT record type */
-  public static final byte TEXT = 0x0C;
+    /** AREF record type */
+    public static final byte AREF = 0x0B;
 
-  /** LAYER record type */
-  public static final byte LAYER = 0x0D;
+    /** TEXT record type */
+    public static final byte TEXT = 0x0C;
 
-  /** DATATYPE record type */
-  public static final byte DATATYPE = 0x0E;
+    /** LAYER record type */
+    public static final byte LAYER = 0x0D;
 
-  /** WIDTH record type */
-  public static final byte WIDTH = 0x0F;
+    /** DATATYPE record type */
+    public static final byte DATATYPE = 0x0E;
 
-  /** XY record type */
-  public static final byte XY = 0x10;
+    /** WIDTH record type */
+    public static final byte WIDTH = 0x0F;
 
-  /** ENDEL record type */
-  public static final byte ENDEL = 0x11;
+    /** XY record type */
+    public static final byte XY = 0x10;
 
-  /** SNAME record type */
-  public static final byte SNAME = 0x12;
+    /** ENDEL record type */
+    public static final byte ENDEL = 0x11;
 
-  /** COLROW record type */
-  public static final byte COLROW = 0x13;
+    /** SNAME record type */
+    public static final byte SNAME = 0x12;
 
-  /** TEXTNODE record type */
-  public static final byte TEXTNODE = 0x14;
+    /** COLROW record type */
+    public static final byte COLROW = 0x13;
 
-  /** NODE record type */
-  public static final byte NODE = 0x15;
+    /** TEXTNODE record type */
+    public static final byte TEXTNODE = 0x14;
 
-  /** TEXTTYPE record type */
-  public static final byte TEXTTYPE = 0x16;
+    /** NODE record type */
+    public static final byte NODE = 0x15;
 
-  /** PRESENTATION record type */
-  public static final byte PRESENTATION = 0x17;
+    /** TEXTTYPE record type */
+    public static final byte TEXTTYPE = 0x16;
 
-  /** SPACING record type */
-  public static final byte SPACING = 0x18;
+    /** PRESENTATION record type */
+    public static final byte PRESENTATION = 0x17;
 
-  /** STRING record type */
-  public static final byte STRING = 0x19;
+    /** SPACING record type */
+    public static final byte SPACING = 0x18;
 
-  /** STRANS record type */
-  public static final byte STRANS = 0x1A;
+    /** STRING record type */
+    public static final byte STRING = 0x19;
 
-  /** MAG record type */
-  public static final byte MAG = 0x1B;
+    /** STRANS record type */
+    public static final byte STRANS = 0x1A;
 
-  /** ANGLE record type */
-  public static final byte ANGLE = 0x1C;
+    /** MAG record type */
+    public static final byte MAG = 0x1B;
 
-  /** UINTEGER record type */
-  public static final byte UINTEGER = 0x1D;
+    /** ANGLE record type */
+    public static final byte ANGLE = 0x1C;
 
-  /** USTRING record type */
-  public static final byte USTRING = 0x1E;
+    /** UINTEGER record type */
+    public static final byte UINTEGER = 0x1D;
 
-  /** REFLIBS record type */
-  public static final byte REFLIBS = 0x1F;
+    /** USTRING record type */
+    public static final byte USTRING = 0x1E;
 
-  /** FONTS record type */
-  public static final byte FONTS = 0x20;
+    /** REFLIBS record type */
+    public static final byte REFLIBS = 0x1F;
 
-  /** PATHTYPE record type */
-  public static final byte PATHTYPE = 0x21;
+    /** FONTS record type */
+    public static final byte FONTS = 0x20;
 
-  /** GENERATIONS record type */
-  public static final byte GENERATIONS = 0x22;
+    /** PATHTYPE record type */
+    public static final byte PATHTYPE = 0x21;
 
-  /** ATTRTABLE record type */
-  public static final byte ATTRTABLE = 0x23;
+    /** GENERATIONS record type */
+    public static final byte GENERATIONS = 0x22;
 
-  /** STYPTABLE record type */
-  public static final byte STYPTABLE = 0x24;
+    /** ATTRTABLE record type */
+    public static final byte ATTRTABLE = 0x23;
 
-  /** STRTYPE record type */
-  public static final byte STRTYPE = 0x25;
+    /** STYPTABLE record type */
+    public static final byte STYPTABLE = 0x24;
 
-  /** ELFLAGS record type */
-  public static final byte ELFLAGS = 0x26;
+    /** STRTYPE record type */
+    public static final byte STRTYPE = 0x25;
 
-  /** ELKEY record type */
-  public static final byte ELKEY = 0x27;
+    /** ELFLAGS record type */
+    public static final byte ELFLAGS = 0x26;
 
-  /** LINKTYPE record type */
-  public static final byte LINKTYPE = 0x28;
+    /** ELKEY record type */
+    public static final byte ELKEY = 0x27;
 
-  /** LINKKEYS record type */
-  public static final byte LINKKEYS = 0x29;
+    /** LINKTYPE record type */
+    public static final byte LINKTYPE = 0x28;
 
-  /** NODETYPE record type */
-  public static final byte NODETYPE = 0x2A;
+    /** LINKKEYS record type */
+    public static final byte LINKKEYS = 0x29;
 
-  /** PROPATTR record type */
-  public static final byte PROPATTR = 0x2B;
+    /** NODETYPE record type */
+    public static final byte NODETYPE = 0x2A;
 
-  /** PROPVALUE record type */
-  public static final byte PROPVALUE = 0x2C;
+    /** PROPATTR record type */
+    public static final byte PROPATTR = 0x2B;
 
-  /** BOX record type */
-  public static final byte BOX = 0x2D;
+    /** PROPVALUE record type */
+    public static final byte PROPVALUE = 0x2C;
 
-  /** BOXTYPE record type */
-  public static final byte BOXTYPE = 0x2E;
+    /** BOX record type */
+    public static final byte BOX = 0x2D;
 
-  /** PLEX record type */
-  public static final byte PLEX = 0x2F;
+    /** BOXTYPE record type */
+    public static final byte BOXTYPE = 0x2E;
 
-  /** BGNEXTN record type */
-  public static final byte BGNEXTN = 0x30;
+    /** PLEX record type */
+    public static final byte PLEX = 0x2F;
 
-  /** ENDEXTN record type */
-  public static final byte ENDEXTN = 0x31;
+    /** BGNEXTN record type */
+    public static final byte BGNEXTN = 0x30;
 
-  /** TAPENUM record type */
-  public static final byte TAPENUM = 0x32;
+    /** ENDEXTN record type */
+    public static final byte ENDEXTN = 0x31;
 
-  /** TAPECODE record type */
-  public static final byte TAPECODE = 0x33;
+    /** TAPENUM record type */
+    public static final byte TAPENUM = 0x32;
 
-  /** STRCLASS record type */
-  public static final byte STRCLASS = 0x34;
+    /** TAPECODE record type */
+    public static final byte TAPECODE = 0x33;
 
-  /** RESERVED record type */
-  public static final byte RESERVED = 0x35;
+    /** STRCLASS record type */
+    public static final byte STRCLASS = 0x34;
 
-  /** FORMAT record type */
-  public static final byte FORMAT = 0x36;
+    /** RESERVED record type */
+    public static final byte RESERVED = 0x35;
 
-  /** MASK record type */
-  public static final byte MASK = 0x37;
+    /** FORMAT record type */
+    public static final byte FORMAT = 0x36;
 
-  /** ENDMASKS record type */
-  public static final byte ENDMASKS = 0x38;
+    /** MASK record type */
+    public static final byte MASK = 0x37;
 
-  /** LIBDIRSIZE record type */
-  public static final byte LIBDIRSIZE = 0x39;
+    /** ENDMASKS record type */
+    public static final byte ENDMASKS = 0x38;
 
-  /** SRFNAME record type */
-  public static final byte SRFNAME = 0x3A;
+    /** LIBDIRSIZE record type */
+    public static final byte LIBDIRSIZE = 0x39;
 
-  /** LIBSECUR record type */
-  public static final byte LIBSECUR = 0x3B;
+    /** SRFNAME record type */
+    public static final byte SRFNAME = 0x3A;
 
-  /** BORDER record type */
-  public static final byte BORDER = 0x3C;
+    /** LIBSECUR record type */
+    public static final byte LIBSECUR = 0x3B;
 
-  /** SOFTFENCE record type */
-  public static final byte SOFTFENCE = 0x3D;
+    /** BORDER record type */
+    public static final byte BORDER = 0x3C;
 
-  /** HARDFENCE record type */
-  public static final byte HARDFENCE = 0x3E;
+    /** SOFTFENCE record type */
+    public static final byte SOFTFENCE = 0x3D;
 
-  /** SOFTWIRE record type */
-  public static final byte SOFTWIRE = 0x3F;
+    /** HARDFENCE record type */
+    public static final byte HARDFENCE = 0x3E;
 
-  /** HARDWIRE record type */
-  public static final byte HARDWIRE = 0x40;
+    /** SOFTWIRE record type */
+    public static final byte SOFTWIRE = 0x3F;
 
-  /** PATHPORT record type */
-  public static final byte PATHPORT = 0x41;
+    /** HARDWIRE record type */
+    public static final byte HARDWIRE = 0x40;
 
-  /** NODEPORT record type */
-  public static final byte NODEPORT = 0x42;
+    /** PATHPORT record type */
+    public static final byte PATHPORT = 0x41;
 
-  /** USERCONSTRAINT record type */
-  public static final byte USERCONSTRAINT = 0x43;
+    /** NODEPORT record type */
+    public static final byte NODEPORT = 0x42;
 
-  /** SPACER_ERROR record type */
-  public static final byte SPACER_ERROR = 0x44;
+    /** USERCONSTRAINT record type */
+    public static final byte USERCONSTRAINT = 0x43;
 
-  /** CONTACT record type */
-  public static final byte CONTACT = 0x45;
+    /** SPACER_ERROR record type */
+    public static final byte SPACER_ERROR = 0x44;
 
-  /** PATH element identifier */
-  public static final int PATH_ELEM_TYPE = 0;
+    /** CONTACT record type */
+    public static final byte CONTACT = 0x45;
 
-  /** BOUNDARY element identifier */
-  public static final int BOUNDARY_ELEM_TYPE = 1;
+    /** PATH element identifier */
+    public static final int PATH_ELEM_TYPE = 0;
 
-  /** TEXT element identifier */
-  public static final int TEXT_ELEM_TYPE = 2;
+    /** BOUNDARY element identifier */
+    public static final int BOUNDARY_ELEM_TYPE = 1;
 
-  /** CONTACT element identifier */
-  public static final int CONTACT_ELEM_TYPE = 3;
+    /** TEXT element identifier */
+    public static final int TEXT_ELEM_TYPE = 2;
 
-  /** SREF element identifier */
-  public static final int SREF_ELEM_TYPE = 4;
+    /** CONTACT element identifier */
+    public static final int CONTACT_ELEM_TYPE = 3;
 
-  /** NODE element identifier */
-  public static final int NODE_ELEM_TYPE = 5;
+    /** SREF element identifier */
+    public static final int SREF_ELEM_TYPE = 4;
 
-  /** BOX element identifier */
-  public static final int BOX_ELEM_TYPE = 6;
+    /** NODE element identifier */
+    public static final int NODE_ELEM_TYPE = 5;
 
-  /** AREF element identifier */
-  public static final int AREF_ELEM_TYPE = 7;
+    /** BOX element identifier */
+    public static final int BOX_ELEM_TYPE = 6;
 
-  /** The maximum number of data bytes a record may contain */
-  public static final int MAX_REC_LEN = Short.MAX_VALUE - 4;
+    /** AREF element identifier */
+    public static final int AREF_ELEM_TYPE = 7;
 
-  /** The record data. */
-  protected byte data[];
+    /** The maximum number of data bytes a record may contain */
+    public static final int MAX_REC_LEN = Integer.MAX_VALUE - 4;
 
-  /** The data type of the record. */
-  protected byte dattype;
+    /** The record data. */
+    protected byte data[];
 
-  /** The internationalized message factory */
-  protected GDSI18NFactory i18n;
+    /** The data type of the record. */
+    protected byte dattype;
 
-  /** The sum total length of all record fields. */
-  protected short length;
+    /** The sum total length of all record fields. */
+    protected int length;
 
-  /** The record type. */
-  protected byte rectype;
+    /** The record type. */
+    protected byte rectype;
 
-  /**
-   * Creates a new NULL GDSRecord object.
-   *
-   * @throws  GDSRecordException  If there is an error creating the record
-   */
-  public GDSRecord()
-    throws GDSRecordException{this((short)0, NULL, NO_DATA_TYPE, new byte[0]);}
-
-  /**
-   * Creates a new GDSRecord object from an existing record.
-   *
-   * @param   rec  The record to duplicate
-   *
-   * @throws  GDSRecordException  If the record is malformed
-   */
-  public GDSRecord(GDSRecord rec)
-    throws GDSRecordException {
-    this(rec.getLength(), rec.getRectype(), rec.getDattype(),
-      rec.getData());
-  }
-
-  /**
-   * Creates a new GDSRecord object.
-   *
-   * @param   length   The total record length
-   * @param   rectype  The record type
-   * @param   dattype  The datatype
-   * @param   data     The record data
-   *
-   * @throws  GDSRecordException  If any of the input parameters would create a
-   *                              malformed record
-   */
-  public GDSRecord(short length, byte rectype, byte dattype, byte data[])
-    throws GDSRecordException {
-    if((data == null) || ((data.length % 2) != 0)) {
-      throw new GDSRecordException(i18n.getString(
-          i18n.i18n_RECORD_THROW1));
+    /**
+     * Creates a new NULL GDSRecord object.
+     *
+     * @throws  GDSRecordException  If there is an error creating the record
+     */
+    public GDSRecord() throws GDSRecordException {
+        this((short) 0, NULL, NO_DATA_TYPE, new byte[0]);
     }
 
-    if((rectype != NULL) && (length != (data.length + 4))) {
-      throw new GDSRecordException(GDSStringUtil.sprintf(
-          i18n.getString(i18n.i18n_RECORD_THROW2),
-          (data.length + 4)));
+    /**
+     * Creates a new GDSRecord object from an existing record.
+     *
+     * @param   rec  The record to duplicate
+     *
+     * @throws  GDSRecordException  If the record is malformed
+     */
+    public GDSRecord(GDSRecord rec) throws GDSRecordException {
+        this(rec.getLength(), rec.getRectype(), rec.getDattype(),
+                rec.getData());
     }
 
-    if((rectype < -1) || (rectype > CONTACT)) {
-      throw new GDSRecordException(GDSStringUtil.sprintf(
-          i18n.getString(i18n.i18n_RECORD_THROW3), rectype));
+    /**
+     * Creates a new GDSRecord object.
+     *
+     * @param   length   The total record length
+     * @param   rectype  The record type
+     * @param   dattype  The datatype
+     * @param   data     The record data
+     *
+     * @throws  GDSRecordException  If any of the input parameters would create a
+     *                              malformed record
+     */
+    public GDSRecord(int length, byte rectype, byte dattype, byte data[]) throws GDSRecordException {
+        if ((data == null) || ((data.length % 2) != 0)) {
+            throw new GDSRecordException(GDSI18NFactory.getString(
+                    GDSI18NFactory.i18n_RECORD_THROW1));
+        }
+
+        if ((rectype != NULL) && (length != (data.length + 4))) {
+            throw new GDSRecordException(GDSStringUtil.sprintf(
+                    GDSI18NFactory.getString(GDSI18NFactory.i18n_RECORD_THROW2),
+                    (data.length + 4)));
+        }
+
+        if ((rectype < -1) || (rectype > CONTACT)) {
+            throw new GDSRecordException(GDSStringUtil.sprintf(
+                    GDSI18NFactory.getString(GDSI18NFactory.i18n_RECORD_THROW3), rectype));
+        }
+
+        if ((dattype < 0) || (dattype > 6)) {
+            throw new GDSRecordException(GDSStringUtil.sprintf(
+                    GDSI18NFactory.getString(GDSI18NFactory.i18n_RECORD_THROW4), dattype));
+        }
+
+        this.data = data;
+        this.length = length;
+        this.rectype = rectype;
+        this.dattype = dattype;
+    } // end ctor GDSRecord
+
+    /**
+     * Returns a copy of the data
+     *
+     * @return  The record data
+     */
+    public byte[] getData() {
+        byte result[] = new byte[this.data.length];
+        System.arraycopy(this.data, 0, result, 0, this.data.length);
+
+        return result;
     }
 
-    if((dattype < 0) || (dattype > 6)) {
-      throw new GDSRecordException(GDSStringUtil.sprintf(
-          i18n.getString(i18n.i18n_RECORD_THROW4), dattype));
+    /**
+     * The datatype of the record
+     *
+     * @return  Record datatype
+     */
+    public byte getDattype() {
+        return this.dattype;
     }
 
-    this.data    = data;
-    this.length  = length;
-    this.rectype = rectype;
-    this.dattype = dattype;
-  } // end ctor GDSRecord
-
-  /**
-   * Returns a copy of the data
-   *
-   * @return  The record data
-   */
-  public byte[] getData() {
-    byte result[] = new byte[data.length];
-    System.arraycopy(data, 0, result, 0, data.length);
-
-    return result;
-  }
-
-  /**
-   * The datatype of the record
-   *
-   * @return  Record datatype
-   */
-  public byte getDattype(){return dattype;}
-
-  /**
-   * Return the total record length
-   *
-   * @return  length
-   */
-  public short getLength(){return length;}
-
-  /**
-   * Return the record type
-   *
-   * @return  Record type
-   */
-  public byte getRectype(){return rectype;}
-
-  /**
-   * Creates a byte array representation of this gds record suitable for
-   * consumption by a stream reader/writer.
-   *
-   * @return  A byte array representation of the record
-   */
-  public byte[] toBytes() {
-    ByteArrayOutputStream result = new ByteArrayOutputStream();
-    GDSByteConverter.fromShort(length, result);
-    GDSByteConverter.fromByte(rectype, result);
-    GDSByteConverter.fromByte(dattype, result);
-
-    try {
-      result.write(data);
-    } catch(IOException e) {
-      System.err.println(i18n.getString(i18n.i18n_RECORD_THROW5));
-
-      return new byte[2];
+    /**
+     * Return the total record length
+     *
+     * @return  length
+     */
+    public int getLength() {
+        return this.length;
     }
 
-    return result.toByteArray();
-  }
-
-  /**
-   * Returns a descriptive string representation of the record.
-   *
-   * @return  The record description
-   */
-  public String toString(){return getClass().getName();}
-
-  /**
-   * Ensures a record is well formed, of the expected record type, of bit array
-   * datatype and that no reserved fields are being utilized.
-   *
-   * @param   rectype    The expected record type
-   * @param   validbits  A bit mask identifying valid bit positions by a '1'
-   *
-   * @throws  GDSRecordException  Thrown if the record is invalid
-   */
-  protected void validateBitarrayRec(byte rectype, short validbits)
-    throws GDSRecordException {
-    validateRec(rectype, BIT_ARRAY_TYPE, 2, 2);
-
-    if((GDSByteConverter.toShort(data) & ~validbits) != 0) {
-      throw new GDSRecordException(i18n.getString(
-          i18n.i18n_RECORD_THROW6));
-    }
-  }
-
-  /**
-   * Ensures a record is well formed, of the expected record type and of double
-   * datatype
-   *
-   * @param   rectype  Expected record type
-   *
-   * @throws  GDSRecordException  Thrown if the record is invalid
-   */
-  protected void validateDoubleRec(byte rectype)
-    throws GDSRecordException{validateDoubleRec(rectype, 8);}
-
-  /**
-   * Ensures a record is well formed, of the expected record type, of double
-   * datatype and contains len number of data bytes
-   *
-   * @param   rectype  Expected record type
-   * @param   len      Expected number of data bytes
-   *
-   * @throws  GDSRecordException  Thrown if the record is invalid
-   */
-  protected void validateDoubleRec(byte rectype, int len)
-    throws GDSRecordException{validateDoubleRec(rectype, len, len);}
-
-  /**
-   * Ensures a record is well formed, of the expected record type, of double
-   * datatype and contains between min and max number of data bytes
-   *
-   * @param   rectype  Expected record type
-   * @param   maxlen   Max number of data bytes
-   * @param   minlen   Min number of databytes
-   *
-   * @throws  GDSRecordException  Thrown if the record is invalid
-   */
-  protected void validateDoubleRec(byte rectype, int maxlen, int minlen)
-    throws GDSRecordException {
-    if((data.length % 8) != 0) {
-      throw new GDSRecordException(i18n.getString(
-          i18n.i18n_RECORD_THROW7));
+    /**
+     * Return the record type
+     *
+     * @return  Record type
+     */
+    public byte getRectype() {
+        return this.rectype;
     }
 
-    validateRec(rectype, DOUBLE_TYPE, maxlen, minlen);
-  }
+    /**
+     * Creates a byte array representation of this gds record suitable for
+     * consumption by a stream reader/writer.
+     *
+     * @return  A byte array representation of the record
+     */
+    public byte[] toBytes() {
+        ByteArrayOutputStream result = new ByteArrayOutputStream();
+        GDSByteConverter.fromShort((short) this.length, result);
+        GDSByteConverter.fromByte(this.rectype, result);
+        GDSByteConverter.fromByte(this.dattype, result);
 
-  /**
-   * Ensures a record is well formed, of the expected record type and of float
-   * datatype
-   *
-   * @param   rectype  Expected record type
-   *
-   * @throws  GDSRecordException  Thrown if the record is invalid
-   */
-  protected void validateFloatRec(byte rectype)
-    throws GDSRecordException{validateFloatRec(rectype, 4);}
+        try {
+            result.write(this.data);
+        }
+        catch (IOException e) {
+            System.err.println(GDSI18NFactory.getString(GDSI18NFactory.i18n_RECORD_THROW5));
 
-  /**
-   * Ensures a record is well formed, of the expected record type, of float
-   * datatype and contains len number of data bytes
-   *
-   * @param   rectype  Expected record type
-   * @param   len      Expected number of data bytes
-   *
-   * @throws  GDSRecordException  Thrown if the record is invalid
-   */
-  protected void validateFloatRec(byte rectype, int len)
-    throws GDSRecordException{validateFloatRec(rectype, len, len);}
+            return new byte[2];
+        }
 
-  /**
-   * Ensures a record is well formed, of the expected record type, of float
-   * datatype and contains between min and max number of data bytes
-   *
-   * @param   rectype  Expected record type
-   * @param   maxlen   Max number of data bytes
-   * @param   minlen   Min number of databytes
-   *
-   * @throws  GDSRecordException  Thrown if the record is invalid
-   */
-  protected void validateFloatRec(byte rectype, int maxlen, int minlen)
-    throws GDSRecordException {
-    if((data.length % 4) != 0) {
-      throw new GDSRecordException(i18n.getString(
-          i18n.i18n_RECORD_THROW8));
+        return result.toByteArray();
     }
 
-    validateRec(rectype, FLOAT_TYPE, maxlen, minlen);
-  }
-
-  /**
-   * Ensures a record is well formed, of the expected record type and of int
-   * datatype
-   *
-   * @param   rectype  Expected record type
-   *
-   * @throws  GDSRecordException  Thrown if the record is invalid
-   */
-  protected void validateIntRec(byte rectype)
-    throws GDSRecordException{validateIntRec(rectype, 4);}
-
-  /**
-   * Ensures a record is well formed, of the expected record type, of int
-   * datatype and contains len number of data bytes
-   *
-   * @param   rectype  Expected record type
-   * @param   len      Expected number of data bytes
-   *
-   * @throws  GDSRecordException  Thrown if the record is invalid
-   */
-  protected void validateIntRec(byte rectype, int len)
-    throws GDSRecordException{validateIntRec(rectype, len, len);}
-
-  /**
-   * Ensures a record is well formed, of the expected record type, of int
-   * datatype and contains between min and max number of data bytes
-   *
-   * @param   rectype  Expected record type
-   * @param   maxlen   Max number of data bytes
-   * @param   minlen   Min number of databytes
-   *
-   * @throws  GDSRecordException  Thrown if the record is invalid
-   */
-  protected void validateIntRec(byte rectype, int maxlen, int minlen)
-    throws GDSRecordException {
-    if((data.length % 4) != 0) {
-      throw new GDSRecordException(i18n.getString(
-          i18n.i18n_RECORD_THROW8));
+    /**
+     * Returns a descriptive string representation of the record.
+     *
+     * @return  The record description
+     */
+    @Override
+    public String toString() {
+        return getClass().getName();
     }
 
-    validateRec(rectype, INT_TYPE, maxlen, minlen);
-  }
+    /**
+     * Ensures a record is well formed, of the expected record type, of bit array
+     * datatype and that no reserved fields are being utilized.
+     *
+     * @param   rectype    The expected record type
+     * @param   validbits  A bit mask identifying valid bit positions by a '1'
+     *
+     * @throws  GDSRecordException  Thrown if the record is invalid
+     */
+    protected void validateBitarrayRec(byte rectype, short validbits) throws GDSRecordException {
+        validateRec(rectype, BIT_ARRAY_TYPE, 2, 2);
 
-  /**
-   * Ensures a record is well formed, of the expected record type and of no data
-   * type
-   *
-   * @param   rectype  Expected record type
-   *
-   * @throws  GDSRecordException  Thrown if the record is invalid
-   */
-  protected void validateNodataRec(byte rectype)
-    throws GDSRecordException{validateRec(rectype, NO_DATA_TYPE, 0, 0);}
-
-  /**
-   * Ensures a record is well formed, of the expected record type and of short
-   * datatype
-   *
-   * @param   rectype  Expected record type
-   *
-   * @throws  GDSRecordException  Thrown if the record is invalid
-   */
-  protected void validateShortRec(byte rectype)
-    throws GDSRecordException{validateShortRec(rectype, 2);}
-
-  /**
-   * Ensures a record is well formed, of the expected record type, of short
-   * datatype and contains len number of data bytes
-   *
-   * @param   rectype  Expected record type
-   * @param   len      Expected number of data bytes
-   *
-   * @throws  GDSRecordException  Thrown if the record is invalid
-   */
-  protected void validateShortRec(byte rectype, int len)
-    throws GDSRecordException{validateShortRec(rectype, len, len);}
-
-  /**
-   * Ensures a record is well formed, of the expected record type, of short
-   * datatype and contains between min and max number of data bytes
-   *
-   * @param   rectype  Expected record type
-   * @param   maxlen   Max number of data bytes
-   * @param   minlen   Min number of databytes
-   *
-   * @throws  GDSRecordException  Thrown if the record is invalid
-   */
-  protected void validateShortRec(byte rectype, int maxlen, int minlen)
-    throws GDSRecordException {
-    if((data.length % 2) != 0) {
-      throw new GDSRecordException(i18n.getString(
-          i18n.i18n_RECORD_THROW9));
+        if ((GDSByteConverter.toShort(this.data) & ~validbits) != 0) {
+            throw new GDSRecordException(GDSI18NFactory.getString(
+                    GDSI18NFactory.i18n_RECORD_THROW6));
+        }
     }
 
-    validateRec(rectype, SHORT_TYPE, maxlen, minlen);
-  }
-
-  /**
-   * Ensures a record is well formed, of the expected record type, of string
-   * datatype and contains len number of data bytes
-   *
-   * @param   rectype  Expected record type
-   * @param   len      Expected number of data bytes
-   *
-   * @throws  GDSRecordException  Thrown if the record is invalid
-   */
-  protected void validateStringRec(byte rectype, int len)
-    throws GDSRecordException{validateStringRec(rectype, len, len);}
-
-  /**
-   * Ensures a record is well formed, of the expected record type, of string
-   * datatype and contains between min and max number of data bytes
-   *
-   * @param   rectype  Expected record type
-   * @param   maxlen   Max number of data bytes
-   * @param   minlen   Min number of databytes
-   *
-   * @throws  GDSRecordException  Thrown if the record is invalid
-   */
-  protected void validateStringRec(byte rectype, int maxlen, int minlen)
-    throws GDSRecordException {
-    if((data.length % 2) != 0) {
-      throw new GDSRecordException(i18n.getString(
-          i18n.i18n_RECORD_THROW9));
+    /**
+     * Ensures a record is well formed, of the expected record type and of double
+     * datatype
+     *
+     * @param   rectype  Expected record type
+     *
+     * @throws  GDSRecordException  Thrown if the record is invalid
+     */
+    protected void validateDoubleRec(byte rectype) throws GDSRecordException {
+        validateDoubleRec(rectype, 8);
     }
 
-    validateRec(rectype, STRING_TYPE, maxlen, minlen);
-  }
-
-  /**
-   * A method to validate the record data
-   *
-   * @param   rectype  The record type
-   * @param   dattype  The data type
-   * @param   maxlen   The maximum record length
-   * @param   minlen   The minimum record length
-   *
-   * @throws  GDSRecordException  If the record is malformed
-   */
-  private void validateRec(byte rectype, byte dattype, int maxlen,
-      int minlen)
-    throws GDSRecordException {
-    if((this.rectype != rectype) || (this.dattype != dattype) ||
-        (this.data.length < minlen) || (this.data.length > maxlen)) {
-      String rec = Integer.toHexString(rectype);
-      String dtp = String.valueOf(dattype);
-
-      if(minlen != maxlen) {
-        throw new GDSRecordException(GDSStringUtil.sprintf(
-            i18n.getString(i18n.i18n_RECORD_THROW10), rec, dtp,
-            (maxlen + 4), (minlen + 4)));
-      } else {
-        throw new GDSRecordException(GDSStringUtil.sprintf(
-            i18n.getString(i18n.i18n_RECORD_THROW11), rec, dtp,
-            (maxlen + 4)));
-      }
+    /**
+     * Ensures a record is well formed, of the expected record type, of double
+     * datatype and contains len number of data bytes
+     *
+     * @param   rectype  Expected record type
+     * @param   len      Expected number of data bytes
+     *
+     * @throws  GDSRecordException  Thrown if the record is invalid
+     */
+    protected void validateDoubleRec(byte rectype, int len) throws GDSRecordException {
+        validateDoubleRec(rectype, len, len);
     }
-  }
+
+    /**
+     * Ensures a record is well formed, of the expected record type, of double
+     * datatype and contains between min and max number of data bytes
+     *
+     * @param   rectype  Expected record type
+     * @param   maxlen   Max number of data bytes
+     * @param   minlen   Min number of databytes
+     *
+     * @throws  GDSRecordException  Thrown if the record is invalid
+     */
+    protected void validateDoubleRec(byte rectype, int maxlen, int minlen) throws GDSRecordException {
+        if ((this.data.length % 8) != 0) {
+            throw new GDSRecordException(GDSI18NFactory.getString(
+                    GDSI18NFactory.i18n_RECORD_THROW7));
+        }
+
+        validateRec(rectype, DOUBLE_TYPE, maxlen, minlen);
+    }
+
+    /**
+     * Ensures a record is well formed, of the expected record type and of float
+     * datatype
+     *
+     * @param   rectype  Expected record type
+     *
+     * @throws  GDSRecordException  Thrown if the record is invalid
+     */
+    protected void validateFloatRec(byte rectype) throws GDSRecordException {
+        validateFloatRec(rectype, 4);
+    }
+
+    /**
+     * Ensures a record is well formed, of the expected record type, of float
+     * datatype and contains len number of data bytes
+     *
+     * @param   rectype  Expected record type
+     * @param   len      Expected number of data bytes
+     *
+     * @throws  GDSRecordException  Thrown if the record is invalid
+     */
+    protected void validateFloatRec(byte rectype, int len) throws GDSRecordException {
+        validateFloatRec(rectype, len, len);
+    }
+
+    /**
+     * Ensures a record is well formed, of the expected record type, of float
+     * datatype and contains between min and max number of data bytes
+     *
+     * @param   rectype  Expected record type
+     * @param   maxlen   Max number of data bytes
+     * @param   minlen   Min number of databytes
+     *
+     * @throws  GDSRecordException  Thrown if the record is invalid
+     */
+    protected void validateFloatRec(byte rectype, int maxlen, int minlen) throws GDSRecordException {
+        if ((this.data.length % 4) != 0) {
+            throw new GDSRecordException(GDSI18NFactory.getString(
+                    GDSI18NFactory.i18n_RECORD_THROW8));
+        }
+
+        validateRec(rectype, FLOAT_TYPE, maxlen, minlen);
+    }
+
+    /**
+     * Ensures a record is well formed, of the expected record type and of int
+     * datatype
+     *
+     * @param   rectype  Expected record type
+     *
+     * @throws  GDSRecordException  Thrown if the record is invalid
+     */
+    protected void validateIntRec(byte rectype) throws GDSRecordException {
+        validateIntRec(rectype, 4);
+    }
+
+    /**
+     * Ensures a record is well formed, of the expected record type, of int
+     * datatype and contains len number of data bytes
+     *
+     * @param   rectype  Expected record type
+     * @param   len      Expected number of data bytes
+     *
+     * @throws  GDSRecordException  Thrown if the record is invalid
+     */
+    protected void validateIntRec(byte rectype, int len) throws GDSRecordException {
+        validateIntRec(rectype, len, len);
+    }
+
+    /**
+     * Ensures a record is well formed, of the expected record type, of int
+     * datatype and contains between min and max number of data bytes
+     *
+     * @param   rectype  Expected record type
+     * @param   maxlen   Max number of data bytes
+     * @param   minlen   Min number of databytes
+     *
+     * @throws  GDSRecordException  Thrown if the record is invalid
+     */
+    protected void validateIntRec(byte rectype, int maxlen, int minlen) throws GDSRecordException {
+        if ((this.data.length % 4) != 0) {
+            throw new GDSRecordException(GDSI18NFactory.getString(
+                    GDSI18NFactory.i18n_RECORD_THROW8));
+        }
+
+        validateRec(rectype, INT_TYPE, maxlen, minlen);
+    }
+
+    /**
+     * Ensures a record is well formed, of the expected record type and of no data
+     * type
+     *
+     * @param   rectype  Expected record type
+     *
+     * @throws  GDSRecordException  Thrown if the record is invalid
+     */
+    protected void validateNodataRec(byte rectype) throws GDSRecordException {
+        validateRec(rectype, NO_DATA_TYPE, 0, 0);
+    }
+
+    /**
+     * Ensures a record is well formed, of the expected record type and of short
+     * datatype
+     *
+     * @param   rectype  Expected record type
+     *
+     * @throws  GDSRecordException  Thrown if the record is invalid
+     */
+    protected void validateShortRec(byte rectype) throws GDSRecordException {
+        validateShortRec(rectype, 2);
+    }
+
+    /**
+     * Ensures a record is well formed, of the expected record type, of short
+     * datatype and contains len number of data bytes
+     *
+     * @param   rectype  Expected record type
+     * @param   len      Expected number of data bytes
+     *
+     * @throws  GDSRecordException  Thrown if the record is invalid
+     */
+    protected void validateShortRec(byte rectype, int len) throws GDSRecordException {
+        validateShortRec(rectype, len, len);
+    }
+
+    /**
+     * Ensures a record is well formed, of the expected record type, of short
+     * datatype and contains between min and max number of data bytes
+     *
+     * @param   rectype  Expected record type
+     * @param   maxlen   Max number of data bytes
+     * @param   minlen   Min number of databytes
+     *
+     * @throws  GDSRecordException  Thrown if the record is invalid
+     */
+    protected void validateShortRec(byte rectype, int maxlen, int minlen) throws GDSRecordException {
+        if ((this.data.length % 2) != 0) {
+            throw new GDSRecordException(GDSI18NFactory.getString(
+                    GDSI18NFactory.i18n_RECORD_THROW9));
+        }
+
+        validateRec(rectype, SHORT_TYPE, maxlen, minlen);
+    }
+
+    /**
+     * Ensures a record is well formed, of the expected record type, of string
+     * datatype and contains len number of data bytes
+     *
+     * @param   rectype  Expected record type
+     * @param   len      Expected number of data bytes
+     *
+     * @throws  GDSRecordException  Thrown if the record is invalid
+     */
+    protected void validateStringRec(byte rectype, int len) throws GDSRecordException {
+        validateStringRec(rectype, len, len);
+    }
+
+    /**
+     * Ensures a record is well formed, of the expected record type, of string
+     * datatype and contains between min and max number of data bytes
+     *
+     * @param   rectype  Expected record type
+     * @param   maxlen   Max number of data bytes
+     * @param   minlen   Min number of databytes
+     *
+     * @throws  GDSRecordException  Thrown if the record is invalid
+     */
+    protected void validateStringRec(byte rectype, int maxlen, int minlen) throws GDSRecordException {
+        if ((this.data.length % 2) != 0) {
+            throw new GDSRecordException(GDSI18NFactory.getString(
+                    GDSI18NFactory.i18n_RECORD_THROW9));
+        }
+
+        validateRec(rectype, STRING_TYPE, maxlen, minlen);
+    }
+
+    /**
+     * A method to validate the record data
+     *
+     * @param   rectype  The record type
+     * @param   dattype  The data type
+     * @param   maxlen   The maximum record length
+     * @param   minlen   The minimum record length
+     *
+     * @throws  GDSRecordException  If the record is malformed
+     */
+    private void validateRec(
+            byte rectype,
+            byte dattype,
+            int maxlen,
+            int minlen) throws GDSRecordException {
+        if ((this.rectype != rectype) || (this.dattype != dattype) ||
+                (this.data.length < minlen) || (this.data.length > maxlen)) {
+            String rec = Integer.toHexString(rectype);
+            String dtp = String.valueOf(dattype);
+
+            if (minlen != maxlen) {
+                throw new GDSRecordException(GDSStringUtil.sprintf(
+                        GDSI18NFactory.getString(GDSI18NFactory.i18n_RECORD_THROW10), rec, dtp,
+                        (maxlen + 4), (minlen + 4)));
+            }
+            else {
+                throw new GDSRecordException(GDSStringUtil.sprintf(
+                        GDSI18NFactory.getString(GDSI18NFactory.i18n_RECORD_THROW11), rec, dtp,
+                        (maxlen + 4)));
+            }
+        }
+    }
 } // end class GDSRecord
-
 
 /* This material is distributed under the GNU General Public License.
  * For more information please go to http://www.gnu.org/copyleft/gpl.html */

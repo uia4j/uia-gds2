@@ -1,4 +1,5 @@
-/* Copyright (C) 2004 Thomas N. Valine
+/*
+ * Copyright (C) 2004 Thomas N. Valine
  * tvaline@users.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or
@@ -8,13 +9,14 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA. */
+ * 02111-1307, USA.
+ */
 
 package com.ohrasys.cad.gds;
 
@@ -27,29 +29,36 @@ package com.ohrasys.cad.gds;
  * @version  $Revision: 1.5 $
  * @since    1.5
  */
-public class GDSNullRecord
-extends GDSRecord {
-  /**
-   * Creates a new GDSNullRecord object.
-   *
-   * @throws  GDSRecordException  If the record is malformed.
-   */
-  public GDSNullRecord()
-    throws GDSRecordException{super();}
+public class GDSNullRecord extends GDSRecord {
 
-  /**
-   * Returns a byte array representation of the record.
-   *
-   * @return  A byte array representation of the record.
-   */
-  public byte[] toBytes(){return new byte[2];}
+    /**
+     * Creates a new GDSNullRecord object.
+     *
+     * @throws  GDSRecordException  If the record is malformed.
+     */
+    public GDSNullRecord() throws GDSRecordException {
+        super();
+    }
 
-  /**
-   * Returns a description of the record.
-   *
-   * @return  A string representation of the record.
-   */
-  public String toString(){return i18n.getString(i18n.i18n_NULL_TOSTRING);}
+    /**
+     * Returns a byte array representation of the record.
+     *
+     * @return  A byte array representation of the record.
+     */
+    @Override
+    public byte[] toBytes() {
+        return new byte[2];
+    }
+
+    /**
+     * Returns a description of the record.
+     *
+     * @return  A string representation of the record.
+     */
+    @Override
+    public String toString() {
+        return GDSI18NFactory.getString(GDSI18NFactory.i18n_NULL_TOSTRING);
+    }
 }
 /* This material is distributed under the GNU General Public License.
  * For more information please go to http://www.gnu.org/copyleft/gpl.html */

@@ -1,4 +1,5 @@
-/* Copyright (C) 2004 Thomas N. Valine
+/*
+ * Copyright (C) 2004 Thomas N. Valine
  * tvaline@users.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or
@@ -8,17 +9,16 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA. */
+ * 02111-1307, USA.
+ */
 
 package com.ohrasys.cad.gds;
-
-import java.io.*;
 
 /**
  * Represents a GDSII LAYER record.
@@ -30,104 +30,102 @@ import java.io.*;
  * @version  $Revision: 1.8 $
  * @since    1.5
  */
-public class GDSLayerRecord
-extends GDSRecord {
-  /** The layer number */
-  private short layer;
+public class GDSLayerRecord extends GDSRecord {
 
-  /**
-   * Creates a new GDSLayerRecord object from an existing record.
-   *
-   * @param   rec  The base record.
-   *
-   * @throws  GDSRecordException  If the record is not a valid LAYER record.
-   */
-  public GDSLayerRecord(GDSRecord rec)
-    throws GDSRecordException {
-    this(rec.getLength(), rec.getRectype(), rec.getDattype(),
-      rec.getData());
-  }
+    /** The layer number */
+    private short layer;
 
-  /**
-   * Creates a new GDSLayerRecord object.
-   *
-   * @param   layer  The layer.
-   *
-   * @throws  GDSRecordException  If the layer is not in the range of 0:255.
-   */
-  public GDSLayerRecord(short layer)
-    throws GDSRecordException {
-    setLayer(layer);
-    this.rectype = LAYER;
-    this.dattype = SHORT_TYPE;
-    this.length  = (short)6;
-  }
+    /**
+     * Creates a new GDSLayerRecord object from an existing record.
+     *
+     * @param   rec  The base record.
+     *
+     * @throws  GDSRecordException  If the record is not a valid LAYER record.
+     */
+    public GDSLayerRecord(GDSRecord rec) throws GDSRecordException {
+        this(rec.getLength(), rec.getRectype(), rec.getDattype(),
+                rec.getData());
+    }
 
-  /**
-   * Creates a new GDSLayerRecord object.
-   *
-   * @param   length   The record length.
-   * @param   rectype  The record type.
-   * @param   dattype  The data type.
-   * @param   data     The record data.
-   *
-   * @throws  GDSRecordException  If the record is malformed.
-   */
-  public GDSLayerRecord(short length, byte rectype, byte dattype,
-      byte data[])
-    throws GDSRecordException {
-    super(length, rectype, dattype, data);
-    validateShortRec(LAYER);
-    this.layer = validate(GDSByteConverter.toShort(data));
-  }
+    /**
+     * Creates a new GDSLayerRecord object.
+     *
+     * @param   layer  The layer.
+     *
+     * @throws  GDSRecordException  If the layer is not in the range of 0:255.
+     */
+    public GDSLayerRecord(short layer) throws GDSRecordException {
+        setLayer(layer);
+        this.rectype = LAYER;
+        this.dattype = SHORT_TYPE;
+        this.length = (short) 6;
+    }
 
-  /**
-   * Returns the layer.
-   *
-   * @return  The layer.
-   */
-  public short getLayer(){return this.layer;}
+    /**
+     * Creates a new GDSLayerRecord object.
+     *
+     * @param   length   The record length.
+     * @param   rectype  The record type.
+     * @param   dattype  The data type.
+     * @param   data     The record data.
+     *
+     * @throws  GDSRecordException  If the record is malformed.
+     */
+    public GDSLayerRecord(int length, byte rectype, byte dattype, byte data[]) throws GDSRecordException {
+        super(length, rectype, dattype, data);
+        validateShortRec(LAYER);
+        this.layer = validate(GDSByteConverter.toShort(data));
+    }
 
-  /**
-   * Sets the layer.
-   *
-   * @param   layer  The layer.
-   *
-   * @throws  GDSRecordException  If the layer is not in the range of 0:255.
-   */
-  public void setLayer(short layer)
-    throws GDSRecordException {
-    this.layer = validate(layer);
-    this.data  = GDSByteConverter.writeShort(layer);
-  }
+    /**
+     * Returns the layer.
+     *
+     * @return  The layer.
+     */
+    public short getLayer() {
+        return this.layer;
+    }
 
-  /**
-   * Returns a description of the record.
-   *
-   * @return  A string representation of the record.
-   */
-  public String toString() {
-    return GDSStringUtil.sprintf(i18n.getString(i18n.i18n_LAYER_TOSTRING),
-        layer);
-  }
+    /**
+     * Sets the layer.
+     *
+     * @param   layer  The layer.
+     *
+     * @throws  GDSRecordException  If the layer is not in the range of 0:255.
+     */
+    public void setLayer(short layer) throws GDSRecordException {
+        this.layer = validate(layer);
+        this.data = GDSByteConverter.writeShort(layer);
+    }
 
-  /**
-   * A method to validate the record data
-   *
-   * @param   layer  The layer number
-   *
-   * @return  The layer number
-   *
-   * @throws  GDSRecordException  If the layer number isn't in the rang 0-255
-   */
-  private short validate(short layer)
-    throws GDSRecordException {
-    if((layer >= 0) && (layer <= 255)){return layer;}
+    /**
+     * Returns a description of the record.
+     *
+     * @return  A string representation of the record.
+     */
+    @Override
+    public String toString() {
+        return GDSStringUtil.sprintf(GDSI18NFactory.getString(GDSI18NFactory.i18n_LAYER_TOSTRING),
+                this.layer);
+    }
 
-    throw new GDSRecordException(i18n.getString(i18n.i18n_LAYER_THROW));
-  }
+    /**
+     * A method to validate the record data
+     *
+     * @param   layer  The layer number
+     *
+     * @return  The layer number
+     *
+     * @throws  GDSRecordException  If the layer number isn't in the rang 0-255
+     */
+    private short validate(short layer) throws GDSRecordException {
+        if ((layer >= 0) && (layer <= 255)) {
+            return layer;
+        }
+
+        throw new GDSRecordException(GDSI18NFactory.getString(GDSI18NFactory.i18n_LAYER_THROW));
+    }
 } // end class GDSLayerRecord
-
 
 /* This material is distributed under the GNU General Public License.
  * For more information please go to http://www.gnu.org/copyleft/gpl.html */

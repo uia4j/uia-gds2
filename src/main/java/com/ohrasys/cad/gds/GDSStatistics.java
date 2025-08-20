@@ -1,4 +1,5 @@
-/* Copyright (C) 2004 Thomas N. Valine
+/*
+ * Copyright (C) 2004 Thomas N. Valine
  * tvaline@users.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or
@@ -8,13 +9,14 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA. */
+ * 02111-1307, USA.
+ */
 
 package com.ohrasys.cad.gds;
 
@@ -26,991 +28,994 @@ package com.ohrasys.cad.gds;
  * @since    1.5
  */
 public class GDSStatistics {
-  /** Number of ANGLE records */
-  private int angle;
 
-  /** Number of AREF records */
-  private int aref;
+    /** Number of ANGLE records */
+    private int angle;
 
-  /** Number of ATTRTABLE records */
-  private int attrtable;
+    /** Number of AREF records */
+    private int aref;
 
-  /** Number of BGNEXTN records */
-  private int bgnextn;
+    /** Number of ATTRTABLE records */
+    private int attrtable;
 
-  /** Number of BGNLIB records */
-  private int bgnlib;
+    /** Number of BGNEXTN records */
+    private int bgnextn;
 
-  /** Numbero of BGNSTR records */
-  private int bgnstr;
+    /** Number of BGNLIB records */
+    private int bgnlib;
 
-  /** Number of BITARRAY datatype records */
-  private int bitarray_type;
+    /** Numbero of BGNSTR records */
+    private int bgnstr;
 
-  /** Number of BORDER records */
-  private int border;
+    /** Number of BITARRAY datatype records */
+    private int bitarray_type;
 
-  /** Number of BOUNDARY records */
-  private int boundary;
+    /** Number of BORDER records */
+    private int border;
 
-  /** Number of BOX records */
-  private int box;
+    /** Number of BOUNDARY records */
+    private int boundary;
 
-  /** Number of BOXTYPE records */
-  private int boxtype;
+    /** Number of BOX records */
+    private int box;
 
-  /** Number of COLROW records */
-  private int colrow;
+    /** Number of BOXTYPE records */
+    private int boxtype;
 
-  /** Number of CONTACT records */
-  private int contact;
+    /** Number of COLROW records */
+    private int colrow;
 
-  /** Number of DATATYPE records */
-  private int datatype;
+    /** Number of CONTACT records */
+    private int contact;
 
-  /** Number of DOUBLE datatype records */
-  private int double_type;
+    /** Number of DATATYPE records */
+    private int datatype;
 
-  /** Number of ELFLAGS records */
-  private int elflags;
+    /** Number of DOUBLE datatype records */
+    private int double_type;
 
-  /** Number of ELKEY records */
-  private int elkey;
+    /** Number of ELFLAGS records */
+    private int elflags;
 
-  /** Number of ENDEL records */
-  private int endel;
+    /** Number of ELKEY records */
+    private int elkey;
 
-  /** Number of ENDEXTN records */
-  private int endextn;
+    /** Number of ENDEL records */
+    private int endel;
 
-  /** Number of ENDLIB records */
-  private int endlib;
+    /** Number of ENDEXTN records */
+    private int endextn;
 
-  /** Number of ENDMASKS records */
-  private int endmasks;
+    /** Number of ENDLIB records */
+    private int endlib;
 
-  /** Number of ENDSTR records */
-  private int endstr;
+    /** Number of ENDMASKS records */
+    private int endmasks;
 
-  /** Number of FLOAT datatype records */
-  private int float_type;
+    /** Number of ENDSTR records */
+    private int endstr;
 
-  /** Number of FONTS records */
-  private int fonts;
+    /** Number of FLOAT datatype records */
+    private int float_type;
 
-  /** Number of FORMAT records */
-  private int format;
+    /** Number of FONTS records */
+    private int fonts;
 
-  /** Number of GENERATIONS records */
-  private int generations;
+    /** Number of FORMAT records */
+    private int format;
 
-  /** Number of HARDFENCE records */
-  private int hardfence;
+    /** Number of GENERATIONS records */
+    private int generations;
 
-  /** Number of HARDWIRE records */
-  private int hardwire;
+    /** Number of HARDFENCE records */
+    private int hardfence;
 
-  /** Number of HEADER records */
-  private int header;
+    /** Number of HARDWIRE records */
+    private int hardwire;
 
-  /** Internationalized strings factory */
-  private GDSI18NFactory i18n;
+    /** Number of HEADER records */
+    private int header;
 
-  /** Number of INT datatype records */
-  private int int_type;
+    /** Internationalized strings factory */
+    private GDSI18NFactory i18n;
 
-  /** Number of LAYER records */
-  private int layer;
+    /** Number of INT datatype records */
+    private int int_type;
 
-  /** Number of LIBDIRSIZE records */
-  private int libdirsize;
+    /** Number of LAYER records */
+    private int layer;
 
-  /** Number of LIBNAME records */
-  private int libname;
+    /** Number of LIBDIRSIZE records */
+    private int libdirsize;
 
-  /** Number of LIBSECUR records */
-  private int libsecur;
+    /** Number of LIBNAME records */
+    private int libname;
 
-  /** Number of LINKKEYS records */
-  private int linkkeys;
+    /** Number of LIBSECUR records */
+    private int libsecur;
 
-  /** Number of LINKTYPE records */
-  private int linktype;
+    /** Number of LINKKEYS records */
+    private int linkkeys;
 
-  /** Number of MAG records */
-  private int mag;
+    /** Number of LINKTYPE records */
+    private int linktype;
 
-  /** Number of MASK records */
-  private int mask;
+    /** Number of MAG records */
+    private int mag;
 
-  /** Number of NODATA datatype records */
-  private int nodata_type;
+    /** Number of MASK records */
+    private int mask;
 
-  /** Number of NODE records */
-  private int node;
+    /** Number of NODATA datatype records */
+    private int nodata_type;
 
-  /** Number of NODEPORT records */
-  private int nodeport;
+    /** Number of NODE records */
+    private int node;
 
-  /** Number of NODETYPE records */
-  private int nodetype;
+    /** Number of NODEPORT records */
+    private int nodeport;
 
-  /** Number of NULL datatype records */
-  private int null_type;
+    /** Number of NODETYPE records */
+    private int nodetype;
 
-  /** Number of NULL records */
-  private int nullrec;
+    /** Number of NULL datatype records */
+    private int null_type;
 
-  /** Number of PATH records */
-  private int path;
+    /** Number of NULL records */
+    private int nullrec;
 
-  /** Number of PATHPORT records */
-  private int pathport;
+    /** Number of PATH records */
+    private int path;
 
-  /** Number or PATHTYPE records */
-  private int pathtype;
+    /** Number of PATHPORT records */
+    private int pathport;
 
-  /** Number of PLEX records */
-  private int plex;
+    /** Number or PATHTYPE records */
+    private int pathtype;
 
-  /** Number of PRESENTATION records */
-  private int presentation;
+    /** Number of PLEX records */
+    private int plex;
 
-  /** Number of PROPATTR records */
-  private int propattr;
+    /** Number of PRESENTATION records */
+    private int presentation;
 
-  /** Number of PROPVALUE records */
-  private int propvalue;
+    /** Number of PROPATTR records */
+    private int propattr;
 
-  /** Number of REFLIBS records */
-  private int reflibs;
+    /** Number of PROPVALUE records */
+    private int propvalue;
 
-  /** Number of RESERVED records */
-  private int reserved;
+    /** Number of REFLIBS records */
+    private int reflibs;
 
-  /** Number of SHORT datatype records */
-  private int short_type;
+    /** Number of RESERVED records */
+    private int reserved;
 
-  /** Number of SNAME records */
-  private int sname;
+    /** Number of SHORT datatype records */
+    private int short_type;
 
-  /** Number of SOFTFENCE records */
-  private int softfence;
+    /** Number of SNAME records */
+    private int sname;
 
-  /** Number of SOFTWIRE records */
-  private int softwire;
+    /** Number of SOFTFENCE records */
+    private int softfence;
 
-  /** Number of SPACERERROR records */
-  private int spacererror;
+    /** Number of SOFTWIRE records */
+    private int softwire;
 
-  /** Number of SPACING records */
-  private int spacing;
+    /** Number of SPACERERROR records */
+    private int spacererror;
 
-  /** Number of SREF records */
-  private int sref;
+    /** Number of SPACING records */
+    private int spacing;
 
-  /** Number of SRFNAME records */
-  private int srfname;
+    /** Number of SREF records */
+    private int sref;
 
-  /** Number of STRANS records */
-  private int strans;
+    /** Number of SRFNAME records */
+    private int srfname;
 
-  /** Number of STRCLASS records */
-  private int strclass;
+    /** Number of STRANS records */
+    private int strans;
 
-  /** Number of STRING records */
-  private int string;
+    /** Number of STRCLASS records */
+    private int strclass;
 
-  /** Number of STRING datatype records */
-  private int string_type;
-
-  /** Number of STRNAME records */
-  private int strname;
-
-  /** Number of STRTYPE records */
-  private int strtype;
-
-  /** Number of STYPTABLE records */
-  private int styptable;
-
-  /** Number of TAPECODE records */
-  private int tapecode;
-
-  /** Number of TAPENUM records */
-  private int tapenum;
-
-  /** Number of TEXT records */
-  private int text;
-
-  /** Number of TEXTNODE records */
-  private int textnode;
-
-  /** Number of TEXTTYPE records */
-  private int texttype;
-
-  /** Total number of records */
-  private int total;
-
-  /** Number of UINTEGER records */
-  private int uinteger;
-
-  /** Number of UNITS records */
-  private int units;
-
-  /** Number of USERCONSTRAINT records */
-  private int userconstraint;
-
-  /** Number of USTRING records */
-  private int ustring;
-
-  /** Number of WIDTH records */
-  private int width;
-
-  /** Number of XY records */
-  private int xy;
-
-  /**
-   * Creates a new GDSStatistics object.
-   */
-  public GDSStatistics(){clear();}
-
-  /** Clears the current statistics. */
-  public void clear() {
-    total          = 0;
-    angle          = 0;
-    aref           = 0;
-    attrtable      = 0;
-    bgnextn        = 0;
-    bgnlib         = 0;
-    bgnstr         = 0;
-    border         = 0;
-    boundary       = 0;
-    box            = 0;
-    boxtype        = 0;
-    colrow         = 0;
-    contact        = 0;
-    datatype       = 0;
-    elflags        = 0;
-    elkey          = 0;
-    endel          = 0;
-    endextn        = 0;
-    endlib         = 0;
-    endmasks       = 0;
-    endstr         = 0;
-    fonts          = 0;
-    format         = 0;
-    generations    = 0;
-    hardfence      = 0;
-    hardwire       = 0;
-    header         = 0;
-    layer          = 0;
-    libdirsize     = 0;
-    libname        = 0;
-    libsecur       = 0;
-    linkkeys       = 0;
-    linktype       = 0;
-    mag            = 0;
-    mask           = 0;
-    node           = 0;
-    nodeport       = 0;
-    nodetype       = 0;
-    nullrec        = 0;
-    path           = 0;
-    pathport       = 0;
-    pathtype       = 0;
-    plex           = 0;
-    presentation   = 0;
-    propattr       = 0;
-    propvalue      = 0;
-    reflibs        = 0;
-    reserved       = 0;
-    sname          = 0;
-    softfence      = 0;
-    softwire       = 0;
-    spacererror    = 0;
-    spacing        = 0;
-    sref           = 0;
-    srfname        = 0;
-    strans         = 0;
-    strclass       = 0;
-    string         = 0;
-    strname        = 0;
-    strtype        = 0;
-    styptable      = 0;
-    tapecode       = 0;
-    tapenum        = 0;
-    text           = 0;
-    textnode       = 0;
-    texttype       = 0;
-    uinteger       = 0;
-    units          = 0;
-    userconstraint = 0;
-    ustring        = 0;
-    width          = 0;
-    xy             = 0;
-    nodata_type    = 0;
-    null_type      = 0;
-    bitarray_type  = 0;
-    short_type     = 0;
-    int_type       = 0;
-    float_type     = 0;
-    double_type    = 0;
-    string_type    = 0;
-  } // end method clear
+    /** Number of STRING records */
+    private int string;
 
-  /**
-   * Records statistics for the specified record.
-   *
-   * @param  rec  The record to process.
-   */
-  public void record(GDSRecord rec) {
-    total++;
+    /** Number of STRING datatype records */
+    private int string_type;
 
-    switch(rec.getRectype()) {
-      case 0x00:
-        header++;
+    /** Number of STRNAME records */
+    private int strname;
 
-        break;
+    /** Number of STRTYPE records */
+    private int strtype;
 
-      case 0x01:
-        bgnlib++;
+    /** Number of STYPTABLE records */
+    private int styptable;
 
-        break;
+    /** Number of TAPECODE records */
+    private int tapecode;
 
-      case 0x02:
-        libname++;
+    /** Number of TAPENUM records */
+    private int tapenum;
 
-        break;
+    /** Number of TEXT records */
+    private int text;
 
-      case 0x03:
-        units++;
+    /** Number of TEXTNODE records */
+    private int textnode;
 
-        break;
+    /** Number of TEXTTYPE records */
+    private int texttype;
 
-      case 0x04:
-        endlib++;
+    /** Total number of records */
+    private int total;
 
-        break;
+    /** Number of UINTEGER records */
+    private int uinteger;
 
-      case 0x05:
-        bgnstr++;
+    /** Number of UNITS records */
+    private int units;
 
-        break;
+    /** Number of USERCONSTRAINT records */
+    private int userconstraint;
 
-      case 0x06:
-        strname++;
+    /** Number of USTRING records */
+    private int ustring;
 
-        break;
+    /** Number of WIDTH records */
+    private int width;
 
-      case 0x07:
-        endstr++;
+    /** Number of XY records */
+    private int xy;
 
-        break;
-
-      case 0x08:
-        boundary++;
-
-        break;
-
-      case 0x09:
-        path++;
-
-        break;
-
-      case 0x0A:
-        sref++;
-
-        break;
-
-      case 0x0B:
-        aref++;
-
-        break;
-
-      case 0x0C:
-        text++;
-
-        break;
-
-      case 0x0D:
-        layer++;
-
-        break;
-
-      case 0x0E:
-        datatype++;
-
-        break;
-
-      case 0x0F:
-        width++;
-
-        break;
-
-      case 0x10:
-        xy++;
-
-        break;
-
-      case 0x11:
-        endel++;
-
-        break;
-
-      case 0x12:
-        sname++;
-
-        break;
-
-      case 0x13:
-        colrow++;
-
-        break;
-
-      case 0x14:
-        textnode++;
-
-        break;
-
-      case 0x15:
-        node++;
-
-        break;
-
-      case 0x16:
-        texttype++;
-
-        break;
-
-      case 0x17:
-        presentation++;
-
-        break;
-
-      case 0x18:
-        spacing++;
-
-        break;
-
-      case 0x19:
-        string++;
-
-        break;
-
-      case 0x1A:
-        strans++;
-
-        break;
-
-      case 0x1B:
-        mag++;
-
-        break;
-
-      case 0x1C:
-        angle++;
-
-        break;
-
-      case 0x1D:
-        uinteger++;
-
-        break;
-
-      case 0x1E:
-        ustring++;
-
-        break;
-
-      case 0x1F:
-        reflibs++;
-
-        break;
-
-      case 0x20:
-        fonts++;
-
-        break;
-
-      case 0x21:
-        pathtype++;
-
-        break;
-
-      case 0x22:
-        generations++;
-
-        break;
-
-      case 0x23:
-        attrtable++;
-
-        break;
-
-      case 0x24:
-        styptable++;
-
-        break;
-
-      case 0x25:
-        strtype++;
-
-        break;
-
-      case 0x26:
-        elflags++;
-
-        break;
-
-      case 0x27:
-        elkey++;
-
-        break;
-
-      case 0x28:
-        linktype++;
-
-        break;
-
-      case 0x29:
-        linkkeys++;
-
-        break;
-
-      case 0x2A:
-        nodetype++;
-
-        break;
-
-      case 0x2B:
-        propattr++;
-
-        break;
-
-      case 0x2C:
-        propvalue++;
-
-        break;
-
-      case 0x2D:
-        box++;
-
-        break;
-
-      case 0x2E:
-        boxtype++;
-
-        break;
-
-      case 0x2F:
-        plex++;
-
-        break;
-
-      case 0x30:
-        bgnextn++;
-
-        break;
-
-      case 0x31:
-        endextn++;
-
-        break;
-
-      case 0x32:
-        tapenum++;
-
-        break;
-
-      case 0x33:
-        tapecode++;
-
-        break;
-
-      case 0x34:
-        strclass++;
-
-        break;
-
-      case 0x35:
-        reserved++;
-
-        break;
-
-      case 0x36:
-        format++;
-
-        break;
-
-      case 0x37:
-        mask++;
-
-        break;
-
-      case 0x38:
-        endmasks++;
-
-        break;
-
-      case 0x39:
-        libdirsize++;
-
-        break;
-
-      case 0x3A:
-        srfname++;
-
-        break;
-
-      case 0x3B:
-        libsecur++;
-
-        break;
-
-      case 0x3C:
-        border++;
-
-        break;
-
-      case 0x3D:
-        softfence++;
-
-        break;
-
-      case 0x3E:
-        hardfence++;
-
-        break;
-
-      case 0x3F:
-        softwire++;
-
-        break;
-
-      case 0x40:
-        hardwire++;
-
-        break;
-
-      case 0x41:
-        pathport++;
-
-        break;
-
-      case 0x42:
-        nodeport++;
-
-        break;
-
-      case 0x43:
-        userconstraint++;
-
-        break;
-
-      case 0x44:
-        spacererror++;
-
-        break;
-
-      case 0x45:
-        contact++;
-
-        break;
-
-      default:
-        nullrec++;
-
-        break;
+    /**
+     * Creates a new GDSStatistics object.
+     */
+    public GDSStatistics() {
+        clear();
     }
 
-    switch(rec.getDattype()) {
-      case 0x00:
-        nodata_type++;
+    /** Clears the current statistics. */
+    public void clear() {
+        this.total = 0;
+        this.angle = 0;
+        this.aref = 0;
+        this.attrtable = 0;
+        this.bgnextn = 0;
+        this.bgnlib = 0;
+        this.bgnstr = 0;
+        this.border = 0;
+        this.boundary = 0;
+        this.box = 0;
+        this.boxtype = 0;
+        this.colrow = 0;
+        this.contact = 0;
+        this.datatype = 0;
+        this.elflags = 0;
+        this.elkey = 0;
+        this.endel = 0;
+        this.endextn = 0;
+        this.endlib = 0;
+        this.endmasks = 0;
+        this.endstr = 0;
+        this.fonts = 0;
+        this.format = 0;
+        this.generations = 0;
+        this.hardfence = 0;
+        this.hardwire = 0;
+        this.header = 0;
+        this.layer = 0;
+        this.libdirsize = 0;
+        this.libname = 0;
+        this.libsecur = 0;
+        this.linkkeys = 0;
+        this.linktype = 0;
+        this.mag = 0;
+        this.mask = 0;
+        this.node = 0;
+        this.nodeport = 0;
+        this.nodetype = 0;
+        this.nullrec = 0;
+        this.path = 0;
+        this.pathport = 0;
+        this.pathtype = 0;
+        this.plex = 0;
+        this.presentation = 0;
+        this.propattr = 0;
+        this.propvalue = 0;
+        this.reflibs = 0;
+        this.reserved = 0;
+        this.sname = 0;
+        this.softfence = 0;
+        this.softwire = 0;
+        this.spacererror = 0;
+        this.spacing = 0;
+        this.sref = 0;
+        this.srfname = 0;
+        this.strans = 0;
+        this.strclass = 0;
+        this.string = 0;
+        this.strname = 0;
+        this.strtype = 0;
+        this.styptable = 0;
+        this.tapecode = 0;
+        this.tapenum = 0;
+        this.text = 0;
+        this.textnode = 0;
+        this.texttype = 0;
+        this.uinteger = 0;
+        this.units = 0;
+        this.userconstraint = 0;
+        this.ustring = 0;
+        this.width = 0;
+        this.xy = 0;
+        this.nodata_type = 0;
+        this.null_type = 0;
+        this.bitarray_type = 0;
+        this.short_type = 0;
+        this.int_type = 0;
+        this.float_type = 0;
+        this.double_type = 0;
+        this.string_type = 0;
+    } // end method clear
 
-        break;
+    /**
+     * Records statistics for the specified record.
+     *
+     * @param  rec  The record to process.
+     */
+    public void record(GDSRecord rec) {
+        this.total++;
 
-      case 0x01:
-        bitarray_type++;
+        switch (rec.getRectype()) {
+            case 0x00:
+                this.header++;
 
-        break;
+                break;
 
-      case 0x02:
-        short_type++;
+            case 0x01:
+                this.bgnlib++;
 
-        break;
+                break;
 
-      case 0x03:
-        int_type++;
+            case 0x02:
+                this.libname++;
 
-        break;
+                break;
 
-      case 0x04:
-        float_type++;
+            case 0x03:
+                this.units++;
 
-        break;
+                break;
 
-      case 0x05:
-        double_type++;
+            case 0x04:
+                this.endlib++;
 
-        break;
+                break;
 
-      case 0x06:
-        string_type++;
+            case 0x05:
+                this.bgnstr++;
 
-        break;
-    }
-  } // end method record
+                break;
 
-  /**
-   * A description of the GDSII database statistics.
-   *
-   * @return  A string representation of the GDSII database statistics.
-   */
-  public String toString() {
-    String result = new String(
-        GDSStringUtil.sprintf(i18n.getString(
-            i18n.i18n_STATS_TOSTRING1), total) + "\n" /*NOI18N*/);
-    result += i18n.getString(i18n.i18n_STATS_TOSTRING2) + "\n" /*NOI18N*/;
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("ANGLE" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + angle + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("AREF" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + aref + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("ATTRTABLE" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + attrtable + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("BGNEXTN" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + bgnextn + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("BGNLIB" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + bgnlib + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("BGNSTR" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + bgnstr + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("BORDER" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + border + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("BOUNDARY" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + boundary + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("BOX" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + box + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("BOXTYPE" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + boxtype + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("COLROW" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + colrow + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("CONTACT" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + contact + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("DATATYPE" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + datatype + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("ELFLAGS" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + elflags + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("ELKEY" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + elkey + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("ENDEL" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + endel + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("ENDEXTN" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + endextn + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("ENDLIB" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + endlib + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("ENDMASKS" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + endmasks + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("ENDSTR" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + endstr + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("FONTS" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + fonts + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("FORMAT" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + format + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("GENERATIONS" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + generations + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("HARDFENCE" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + hardfence + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("HARDWIRE" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + hardwire + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("HEADER" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + header + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("LAYER" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + layer + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("LIBDIRSIZE" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + libdirsize + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("LIBNAME" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + libname + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("LIBSECUR" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + libsecur + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("LINKKEYS" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + linkkeys + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("LINKTYPE" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + linktype + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("MAG" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + mag + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("MASK" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + mask + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("NODE" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + node + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("NODEPORT" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + nodeport + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("NODETYPE" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + nodetype + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("NULL" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + nullrec + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("PATH" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + path + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("PATHPORT" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + pathport + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("PATHTYPE" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + pathtype + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("PLEX" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + plex + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("PRESENTATION" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + presentation + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("PROPATTR" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + propattr + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("PROPVALUE" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + propvalue + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("REFLIBS" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + reflibs + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("RESERVED" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + reserved + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("SNAME" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + sname + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("SOFTFENCE" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + softfence + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("SOFTWIRE" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + softwire + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("SPACERERROR" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + spacererror + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("SPACING" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + spacing + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("SREF" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + sref + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("SRFNAME" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + srfname + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("STRANS" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + strans + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("STRCLASS" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + strclass + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("STRING" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + string + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("STRNAME" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + strname + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("STRTYPE" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + strtype + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("STYPTABLE" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + styptable + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("TAPECODE" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + tapecode + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("TAPENUM" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + tapenum + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("TEXT" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + text + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("TEXTNODE" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + textnode + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("TEXTTYPE" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + texttype + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("UINTEGER" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + uinteger + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("UNITS" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + units + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("USERCONSTRAINT" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + userconstraint + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("USTRING" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + ustring + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("WIDTH" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + width + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("XY" /*NOI18N*/, 16) +
-        ":  " /*NOI18N*/ + xy + "\n" /*NOI18N*/);
-    result += i18n.getString(i18n.i18n_STATS_TOSTRING3) + "\n" /*NOI18N*/;
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("NULL DATA RECORD" /*NOI18N*/, 18) +
-        ":  " /*NOI18N*/ + nodata_type + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("BIT ARRAY RECORD" /*NOI18N*/, 18) +
-        ":  " /*NOI18N*/ + bitarray_type + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("SHORT RECORD" /*NOI18N*/, 18) +
-        ":  " /*NOI18N*/ + short_type + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("INT RECORD" /*NOI18N*/, 18) +
-        ":  " /*NOI18N*/ + int_type + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("FLOAT RECORD" /*NOI18N*/, 18) +
-        ":  " /*NOI18N*/ + float_type + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("DOUBLE RECORD" /*NOI18N*/, 18) +
-        ":  " /*NOI18N*/ + double_type + "\n" /*NOI18N*/);
-    result += ("\t" /*NOI18N*/ +
-        GDSStringUtil.fixLength("STRING RECORD" /*NOI18N*/, 18) +
-        ":  " /*NOI18N*/ + string_type + "\n" /*NOI18N*/);
+            case 0x06:
+                this.strname++;
 
-    return result;
-  } // end method toString
+                break;
+
+            case 0x07:
+                this.endstr++;
+
+                break;
+
+            case 0x08:
+                this.boundary++;
+
+                break;
+
+            case 0x09:
+                this.path++;
+
+                break;
+
+            case 0x0A:
+                this.sref++;
+
+                break;
+
+            case 0x0B:
+                this.aref++;
+
+                break;
+
+            case 0x0C:
+                this.text++;
+
+                break;
+
+            case 0x0D:
+                this.layer++;
+
+                break;
+
+            case 0x0E:
+                this.datatype++;
+
+                break;
+
+            case 0x0F:
+                this.width++;
+
+                break;
+
+            case 0x10:
+                this.xy++;
+
+                break;
+
+            case 0x11:
+                this.endel++;
+
+                break;
+
+            case 0x12:
+                this.sname++;
+
+                break;
+
+            case 0x13:
+                this.colrow++;
+
+                break;
+
+            case 0x14:
+                this.textnode++;
+
+                break;
+
+            case 0x15:
+                this.node++;
+
+                break;
+
+            case 0x16:
+                this.texttype++;
+
+                break;
+
+            case 0x17:
+                this.presentation++;
+
+                break;
+
+            case 0x18:
+                this.spacing++;
+
+                break;
+
+            case 0x19:
+                this.string++;
+
+                break;
+
+            case 0x1A:
+                this.strans++;
+
+                break;
+
+            case 0x1B:
+                this.mag++;
+
+                break;
+
+            case 0x1C:
+                this.angle++;
+
+                break;
+
+            case 0x1D:
+                this.uinteger++;
+
+                break;
+
+            case 0x1E:
+                this.ustring++;
+
+                break;
+
+            case 0x1F:
+                this.reflibs++;
+
+                break;
+
+            case 0x20:
+                this.fonts++;
+
+                break;
+
+            case 0x21:
+                this.pathtype++;
+
+                break;
+
+            case 0x22:
+                this.generations++;
+
+                break;
+
+            case 0x23:
+                this.attrtable++;
+
+                break;
+
+            case 0x24:
+                this.styptable++;
+
+                break;
+
+            case 0x25:
+                this.strtype++;
+
+                break;
+
+            case 0x26:
+                this.elflags++;
+
+                break;
+
+            case 0x27:
+                this.elkey++;
+
+                break;
+
+            case 0x28:
+                this.linktype++;
+
+                break;
+
+            case 0x29:
+                this.linkkeys++;
+
+                break;
+
+            case 0x2A:
+                this.nodetype++;
+
+                break;
+
+            case 0x2B:
+                this.propattr++;
+
+                break;
+
+            case 0x2C:
+                this.propvalue++;
+
+                break;
+
+            case 0x2D:
+                this.box++;
+
+                break;
+
+            case 0x2E:
+                this.boxtype++;
+
+                break;
+
+            case 0x2F:
+                this.plex++;
+
+                break;
+
+            case 0x30:
+                this.bgnextn++;
+
+                break;
+
+            case 0x31:
+                this.endextn++;
+
+                break;
+
+            case 0x32:
+                this.tapenum++;
+
+                break;
+
+            case 0x33:
+                this.tapecode++;
+
+                break;
+
+            case 0x34:
+                this.strclass++;
+
+                break;
+
+            case 0x35:
+                this.reserved++;
+
+                break;
+
+            case 0x36:
+                this.format++;
+
+                break;
+
+            case 0x37:
+                this.mask++;
+
+                break;
+
+            case 0x38:
+                this.endmasks++;
+
+                break;
+
+            case 0x39:
+                this.libdirsize++;
+
+                break;
+
+            case 0x3A:
+                this.srfname++;
+
+                break;
+
+            case 0x3B:
+                this.libsecur++;
+
+                break;
+
+            case 0x3C:
+                this.border++;
+
+                break;
+
+            case 0x3D:
+                this.softfence++;
+
+                break;
+
+            case 0x3E:
+                this.hardfence++;
+
+                break;
+
+            case 0x3F:
+                this.softwire++;
+
+                break;
+
+            case 0x40:
+                this.hardwire++;
+
+                break;
+
+            case 0x41:
+                this.pathport++;
+
+                break;
+
+            case 0x42:
+                this.nodeport++;
+
+                break;
+
+            case 0x43:
+                this.userconstraint++;
+
+                break;
+
+            case 0x44:
+                this.spacererror++;
+
+                break;
+
+            case 0x45:
+                this.contact++;
+
+                break;
+
+            default:
+                this.nullrec++;
+
+                break;
+        }
+
+        switch (rec.getDattype()) {
+            case 0x00:
+                this.nodata_type++;
+
+                break;
+
+            case 0x01:
+                this.bitarray_type++;
+
+                break;
+
+            case 0x02:
+                this.short_type++;
+
+                break;
+
+            case 0x03:
+                this.int_type++;
+
+                break;
+
+            case 0x04:
+                this.float_type++;
+
+                break;
+
+            case 0x05:
+                this.double_type++;
+
+                break;
+
+            case 0x06:
+                this.string_type++;
+
+                break;
+        }
+    } // end method record
+
+    /**
+     * A description of the GDSII database statistics.
+     *
+     * @return  A string representation of the GDSII database statistics.
+     */
+    @Override
+    public String toString() {
+        String result = new String(
+                GDSStringUtil.sprintf(GDSI18NFactory.getString(
+                        GDSI18NFactory.i18n_STATS_TOSTRING1), this.total) + "\n" /*NOI18N*/);
+        result += GDSI18NFactory.getString(GDSI18NFactory.i18n_STATS_TOSTRING2) + "\n" /*NOI18N*/;
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("ANGLE" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.angle + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("AREF" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.aref + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("ATTRTABLE" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.attrtable + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("BGNEXTN" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.bgnextn + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("BGNLIB" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.bgnlib + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("BGNSTR" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.bgnstr + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("BORDER" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.border + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("BOUNDARY" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.boundary + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("BOX" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.box + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("BOXTYPE" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.boxtype + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("COLROW" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.colrow + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("CONTACT" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.contact + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("DATATYPE" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.datatype + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("ELFLAGS" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.elflags + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("ELKEY" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.elkey + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("ENDEL" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.endel + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("ENDEXTN" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.endextn + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("ENDLIB" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.endlib + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("ENDMASKS" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.endmasks + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("ENDSTR" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.endstr + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("FONTS" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.fonts + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("FORMAT" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.format + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("GENERATIONS" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.generations + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("HARDFENCE" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.hardfence + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("HARDWIRE" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.hardwire + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("HEADER" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.header + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("LAYER" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.layer + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("LIBDIRSIZE" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.libdirsize + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("LIBNAME" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.libname + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("LIBSECUR" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.libsecur + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("LINKKEYS" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.linkkeys + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("LINKTYPE" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.linktype + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("MAG" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.mag + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("MASK" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.mask + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("NODE" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.node + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("NODEPORT" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.nodeport + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("NODETYPE" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.nodetype + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("NULL" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.nullrec + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("PATH" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.path + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("PATHPORT" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.pathport + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("PATHTYPE" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.pathtype + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("PLEX" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.plex + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("PRESENTATION" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.presentation + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("PROPATTR" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.propattr + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("PROPVALUE" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.propvalue + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("REFLIBS" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.reflibs + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("RESERVED" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.reserved + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("SNAME" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.sname + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("SOFTFENCE" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.softfence + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("SOFTWIRE" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.softwire + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("SPACERERROR" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.spacererror + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("SPACING" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.spacing + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("SREF" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.sref + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("SRFNAME" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.srfname + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("STRANS" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.strans + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("STRCLASS" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.strclass + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("STRING" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.string + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("STRNAME" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.strname + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("STRTYPE" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.strtype + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("STYPTABLE" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.styptable + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("TAPECODE" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.tapecode + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("TAPENUM" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.tapenum + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("TEXT" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.text + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("TEXTNODE" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.textnode + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("TEXTTYPE" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.texttype + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("UINTEGER" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.uinteger + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("UNITS" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.units + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("USERCONSTRAINT" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.userconstraint + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("USTRING" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.ustring + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("WIDTH" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.width + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("XY" /*NOI18N*/, 16) +
+                ":  " /*NOI18N*/ + this.xy + "\n" /*NOI18N*/);
+        result += GDSI18NFactory.getString(GDSI18NFactory.i18n_STATS_TOSTRING3) + "\n" /*NOI18N*/;
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("NULL DATA RECORD" /*NOI18N*/, 18) +
+                ":  " /*NOI18N*/ + this.nodata_type + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("BIT ARRAY RECORD" /*NOI18N*/, 18) +
+                ":  " /*NOI18N*/ + this.bitarray_type + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("SHORT RECORD" /*NOI18N*/, 18) +
+                ":  " /*NOI18N*/ + this.short_type + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("INT RECORD" /*NOI18N*/, 18) +
+                ":  " /*NOI18N*/ + this.int_type + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("FLOAT RECORD" /*NOI18N*/, 18) +
+                ":  " /*NOI18N*/ + this.float_type + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("DOUBLE RECORD" /*NOI18N*/, 18) +
+                ":  " /*NOI18N*/ + this.double_type + "\n" /*NOI18N*/);
+        result += ("\t" /*NOI18N*/ +
+                GDSStringUtil.fixLength("STRING RECORD" /*NOI18N*/, 18) +
+                ":  " /*NOI18N*/ + this.string_type + "\n" /*NOI18N*/);
+
+        return result;
+    } // end method toString
 } // end class GDSStatistics
-
 
 /* This material is distributed under the GNU General Public License.
  * For more information please go to http://www.gnu.org/copyleft/gpl.html */

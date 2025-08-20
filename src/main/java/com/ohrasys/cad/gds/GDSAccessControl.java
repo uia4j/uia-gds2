@@ -1,4 +1,5 @@
-/* Copyright (C) 2004 Thomas N. Valine
+/*
+ * Copyright (C) 2004 Thomas N. Valine
  * tvaline@users.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or
@@ -8,13 +9,14 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA. */
+ * 02111-1307, USA.
+ */
 
 package com.ohrasys.cad.gds;
 
@@ -27,121 +29,142 @@ package com.ohrasys.cad.gds;
  * @since    1.5
  */
 public class GDSAccessControl {
-  /** The value of the access rights */
-  private short access;
 
-  /** The group number */
-  private short group;
+    /** The value of the access rights */
+    private short access;
 
-  /** The user id */
-  private short user;
+    /** The group number */
+    private short group;
 
-  /**
-   * Creates a copy of an existing GDSAccessControl object.
-   *
-   * @param  data  The GDSAccessControl object to copy.
-   */
-  public GDSAccessControl(GDSAccessControl data) {
-    this.group  = data.group;
-    this.user   = data.user;
-    this.access = data.access;
-  }
+    /** The user id */
+    private short user;
 
-  /**
-   * Creates a new GDSAccessControl object.
-   *
-   * @param  group   Group number.
-   * @param  user    User number.
-   * @param  access  Access rights.
-   */
-  public GDSAccessControl(short group, short user, short access) {
-    this.group  = group;
-    this.user   = user;
-    this.access = access;
-  }
+    /**
+     * Creates a copy of an existing GDSAccessControl object.
+     *
+     * @param  data  The GDSAccessControl object to copy.
+     */
+    public GDSAccessControl(GDSAccessControl data) {
+        this.group = data.group;
+        this.user = data.user;
+        this.access = data.access;
+    }
 
-  /**
-   * Determines if one access control list is equivalent to another.
-   *
-   * @param   obj  The object to compare to.
-   *
-   * @return  true if the objects contain the same data.
-   */
-  public boolean equals(Object obj) {
-    if(obj == null){return false;}
+    /**
+     * Creates a new GDSAccessControl object.
+     *
+     * @param  group   Group number.
+     * @param  user    User number.
+     * @param  access  Access rights.
+     */
+    public GDSAccessControl(short group, short user, short access) {
+        this.group = group;
+        this.user = user;
+        this.access = access;
+    }
 
-    if(this == obj){return true;}
+    /**
+     * Determines if one access control list is equivalent to another.
+     *
+     * @param   obj  The object to compare to.
+     *
+     * @return  true if the objects contain the same data.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
 
-    if((obj instanceof GDSAccessControl) &&
-        (((GDSAccessControl)obj).user == this.user) &&
-        (((GDSAccessControl)obj).group == this.group) &&
-        (((GDSAccessControl)obj).access == this.access)){return true;}
+        if (this == obj) {
+            return true;
+        }
 
-    return false;
-  }
+        if ((obj instanceof GDSAccessControl) &&
+                (((GDSAccessControl) obj).user == this.user) &&
+                (((GDSAccessControl) obj).group == this.group) &&
+                (((GDSAccessControl) obj).access == this.access)) {
+            return true;
+        }
 
-  /**
-   * Gets the access control permissions.
-   *
-   * @return  The current access control permissions.
-   */
-  public short getAccess(){return this.access;}
+        return false;
+    }
 
-  /**
-   * Gets the group number.
-   *
-   * @return  The current group number.
-   */
-  public short getGroup(){return this.group;}
+    /**
+     * Gets the access control permissions.
+     *
+     * @return  The current access control permissions.
+     */
+    public short getAccess() {
+        return this.access;
+    }
 
-  /**
-   * Gets the user number.
-   *
-   * @return  The current user number.
-   */
-  public short getUser(){return this.user;}
+    /**
+     * Gets the group number.
+     *
+     * @return  The current group number.
+     */
+    public short getGroup() {
+        return this.group;
+    }
 
-  /**
-   * Generates a hashing code for the access control.
-   *
-   * @return  A hashcode for the access control.
-   */
-  public int hashCode(){return (this.user ^ this.group ^ this.access);}
+    /**
+     * Gets the user number.
+     *
+     * @return  The current user number.
+     */
+    public short getUser() {
+        return this.user;
+    }
 
-  /**
-   * Sets the access control permissions.
-   *
-   * @param  access  The new access control permissions.
-   */
-  public void setAccess(short access){this.access = access;}
+    /**
+     * Generates a hashing code for the access control.
+     *
+     * @return  A hashcode for the access control.
+     */
+    @Override
+    public int hashCode() {
+        return (this.user ^ this.group ^ this.access);
+    }
 
-  /**
-   * Sets the group number.
-   *
-   * @param  group  The new group number.
-   */
-  public void setGroup(short group){this.group = group;}
+    /**
+     * Sets the access control permissions.
+     *
+     * @param  access  The new access control permissions.
+     */
+    public void setAccess(short access) {
+        this.access = access;
+    }
 
-  /**
-   * Sets the user number.
-   *
-   * @param  user  The new user number.
-   */
-  public void setUser(short user){this.user = user;}
+    /**
+     * Sets the group number.
+     *
+     * @param  group  The new group number.
+     */
+    public void setGroup(short group) {
+        this.group = group;
+    }
 
-  /**
-   * Returns description of the access control.
-   *
-   * @return  A string representation of the access control.
-   */
-  public String toString() {
-    GDSI18NFactory i18n = new GDSI18NFactory();
+    /**
+     * Sets the user number.
+     *
+     * @param  user  The new user number.
+     */
+    public void setUser(short user) {
+        this.user = user;
+    }
 
-    return GDSStringUtil.sprintf(i18n.getString(i18n.i18n_ACCS_CTL), group,
-        user, access);
-  }
+    /**
+     * Returns description of the access control.
+     *
+     * @return  A string representation of the access control.
+     */
+    @Override
+    public String toString() {
+        return GDSStringUtil.sprintf(GDSI18NFactory.getString(GDSI18NFactory.i18n_ACCS_CTL), this.group,
+                this.user, this.access);
+    }
 } // end class GDSAccessControl
-
 
 /* This material is distributed under the GNU General Public License.
  * For more information please go to http://www.gnu.org/copyleft/gpl.html */

@@ -1,4 +1,5 @@
-/* Copyright (C) 2004 Thomas N. Valine
+/*
+ * Copyright (C) 2004 Thomas N. Valine
  * tvaline@users.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or
@@ -8,13 +9,14 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA. */
+ * 02111-1307, USA.
+ */
 
 package com.ohrasys.cad.gds;
 
@@ -27,388 +29,390 @@ package com.ohrasys.cad.gds;
  * @since    1.5
  */
 public class GDSRecordFactory {
-  /**
-   * Expands an unidentified GDSRecord to a specifc type of GDSII record based
-   * on the record type.
-   *
-   * @param   rec  The record to expand.
-   *
-   * @return  A specific GDSII record with of the appropriate type.
-   *
-   * @throws  GDSRecordException  If the record is not a valid GDSII record.
-   */
-  public static GDSRecord expandRecord(GDSRecord rec)
-    throws GDSRecordException {
-    GDSRecord result = rec;
 
-    switch(rec.getRectype()) {
-      case 0x00:
-        result = new GDSHeaderRecord(rec);
+    /**
+     * Expands an unidentified GDSRecord to a specifc type of GDSII record based
+     * on the record type.
+     *
+     * @param   rec  The record to expand.
+     *
+     * @return  A specific GDSII record with of the appropriate type.
+     *
+     * @throws  GDSRecordException  If the record is not a valid GDSII record.
+     */
+    public static GDSRecord expandRecord(GDSRecord rec) throws GDSRecordException {
+        GDSRecord result = rec;
 
-        break;
+        switch (rec.getRectype()) {
+            case 0x00:
+                result = new GDSHeaderRecord(rec);
 
-      case 0x01:
-        result = new GDSBgnlibRecord(rec);
+                break;
 
-        break;
+            case 0x01:
+                result = new GDSBgnlibRecord(rec);
 
-      case 0x02:
-        result = new GDSLibnameRecord(rec);
+                break;
 
-        break;
+            case 0x02:
+                result = new GDSLibnameRecord(rec);
 
-      case 0x03:
-        result = new GDSUnitsRecord(rec);
+                break;
 
-        break;
+            case 0x03:
+                result = new GDSUnitsRecord(rec);
 
-      case 0x04:
-        result = new GDSEndlibRecord(rec);
+                break;
 
-        break;
+            case 0x04:
+                result = new GDSEndlibRecord(rec);
 
-      case 0x05:
-        result = new GDSBgnstrRecord(rec);
+                break;
 
-        break;
+            case 0x05:
+                result = new GDSBgnstrRecord(rec);
 
-      case 0x06:
-        result = new GDSStrnameRecord(rec);
+                break;
 
-        break;
+            case 0x06:
+                result = new GDSStrnameRecord(rec);
 
-      case 0x07:
-        result = new GDSEndstrRecord(rec);
+                break;
 
-        break;
+            case 0x07:
+                result = new GDSEndstrRecord(rec);
 
-      case 0x08:
-        result = new GDSBoundaryRecord(rec);
+                break;
 
-        break;
+            case 0x08:
+                result = new GDSBoundaryRecord(rec);
 
-      case 0x09:
-        result = new GDSPathRecord(rec);
+                break;
 
-        break;
+            case 0x09:
+                result = new GDSPathRecord(rec);
 
-      case 0x0A:
-        result = new GDSSrefRecord(rec);
+                break;
 
-        break;
+            case 0x0A:
+                result = new GDSSrefRecord(rec);
 
-      case 0x0B:
-        result = new GDSArefRecord(rec);
+                break;
 
-        break;
+            case 0x0B:
+                result = new GDSArefRecord(rec);
 
-      case 0x0C:
-        result = new GDSTextRecord(rec);
+                break;
 
-        break;
+            case 0x0C:
+                result = new GDSTextRecord(rec);
 
-      case 0x0D:
-        result = new GDSLayerRecord(rec);
+                break;
 
-        break;
+            case 0x0D:
+                result = new GDSLayerRecord(rec);
 
-      case 0x0E:
-        result = new GDSDatatypeRecord(rec);
+                break;
 
-        break;
+            case 0x0E:
+                result = new GDSDatatypeRecord(rec);
 
-      case 0x0F:
-        result = new GDSWidthRecord(rec);
+                break;
 
-        break;
+            case 0x0F:
+                result = new GDSWidthRecord(rec);
 
-      case 0x10:
-        result = new GDSXyRecord(rec);
+                break;
 
-        break;
+            case 0x10:
+                result = new GDSXyRecord(rec);
 
-      case 0x11:
-        result = new GDSEndelRecord(rec);
+                break;
 
-        break;
+            case 0x11:
+                result = new GDSEndelRecord(rec);
 
-      case 0x12:
-        result = new GDSSnameRecord(rec);
+                break;
 
-        break;
+            case 0x12:
+                result = new GDSSnameRecord(rec);
 
-      case 0x13:
-        result = new GDSColrowRecord(rec);
+                break;
 
-        break;
+            case 0x13:
+                result = new GDSColrowRecord(rec);
 
-      case 0x14:
-        result = new GDSTextnodeRecord(rec);
+                break;
 
-        break;
+            case 0x14:
+                result = new GDSTextnodeRecord(rec);
 
-      case 0x15:
-        result = new GDSNodeRecord(rec);
+                break;
 
-        break;
+            case 0x15:
+                result = new GDSNodeRecord(rec);
 
-      case 0x16:
-        result = new GDSTexttypeRecord(rec);
+                break;
 
-        break;
+            case 0x16:
+                result = new GDSTexttypeRecord(rec);
 
-      case 0x17:
-        result = new GDSPresentationRecord(rec);
+                break;
 
-        break;
+            case 0x17:
+                result = new GDSPresentationRecord(rec);
 
-      case 0x18:
-        result = new GDSSpacingRecord(rec);
+                break;
 
-        break;
+            case 0x18:
+                result = new GDSSpacingRecord(rec);
 
-      case 0x19:
-        result = new GDSStringRecord(rec);
+                break;
 
-        break;
+            case 0x19:
+                result = new GDSStringRecord(rec);
 
-      case 0x1A:
-        result = new GDSStransRecord(rec);
+                break;
 
-        break;
+            case 0x1A:
+                result = new GDSStransRecord(rec);
 
-      case 0x1B:
-        result = new GDSMagRecord(rec);
+                break;
 
-        break;
+            case 0x1B:
+                result = new GDSMagRecord(rec);
 
-      case 0x1C:
-        result = new GDSAngleRecord(rec);
+                break;
 
-        break;
+            case 0x1C:
+                result = new GDSAngleRecord(rec);
 
-      case 0x1D:
-        result = new GDSUintegerRecord(rec);
+                break;
 
-        break;
+            case 0x1D:
+                result = new GDSUintegerRecord(rec);
 
-      case 0x1E:
-        result = new GDSUstringRecord(rec);
+                break;
 
-        break;
+            case 0x1E:
+                result = new GDSUstringRecord(rec);
 
-      case 0x1F:
-        result = new GDSReflibsRecord(rec);
+                break;
 
-        break;
+            case 0x1F:
+                result = new GDSReflibsRecord(rec);
 
-      case 0x20:
-        result = new GDSFontsRecord(rec);
+                break;
 
-        break;
+            case 0x20:
+                result = new GDSFontsRecord(rec);
 
-      case 0x21:
-        result = new GDSPathtypeRecord(rec);
+                break;
 
-        break;
+            case 0x21:
+                result = new GDSPathtypeRecord(rec);
 
-      case 0x22:
-        result = new GDSGenerationsRecord(rec);
+                break;
 
-        break;
+            case 0x22:
+                result = new GDSGenerationsRecord(rec);
 
-      case 0x23:
-        result = new GDSAttrtableRecord(rec);
+                break;
 
-        break;
+            case 0x23:
+                result = new GDSAttrtableRecord(rec);
 
-      case 0x24:
-        result = new GDSStyptableRecord(rec);
+                break;
 
-        break;
+            case 0x24:
+                result = new GDSStyptableRecord(rec);
 
-      case 0x25:
-        result = new GDSStrtypeRecord(rec);
+                break;
 
-        break;
+            case 0x25:
+                result = new GDSStrtypeRecord(rec);
 
-      case 0x26:
-        result = new GDSElflagsRecord(rec);
+                break;
 
-        break;
+            case 0x26:
+                result = new GDSElflagsRecord(rec);
 
-      case 0x27:
-        result = new GDSElkeyRecord(rec);
+                break;
 
-        break;
+            case 0x27:
+                result = new GDSElkeyRecord(rec);
 
-      case 0x28:
-        result = new GDSLinktypeRecord(rec);
+                break;
 
-        break;
+            case 0x28:
+                result = new GDSLinktypeRecord(rec);
 
-      case 0x29:
-        result = new GDSLinkkeysRecord(rec);
+                break;
 
-        break;
+            case 0x29:
+                result = new GDSLinkkeysRecord(rec);
 
-      case 0x2A:
-        result = new GDSNodetypeRecord(rec);
+                break;
 
-        break;
+            case 0x2A:
+                result = new GDSNodetypeRecord(rec);
 
-      case 0x2B:
-        result = new GDSPropattrRecord(rec);
+                break;
 
-        break;
+            case 0x2B:
+                result = new GDSPropattrRecord(rec);
 
-      case 0x2C:
-        result = new GDSPropvalueRecord(rec);
+                break;
 
-        break;
+            case 0x2C:
+                result = new GDSPropvalueRecord(rec);
 
-      case 0x2D:
-        result = new GDSBoxRecord(rec);
+                break;
 
-        break;
+            case 0x2D:
+                result = new GDSBoxRecord(rec);
 
-      case 0x2E:
-        result = new GDSBoxtypeRecord(rec);
+                break;
 
-        break;
+            case 0x2E:
+                result = new GDSBoxtypeRecord(rec);
 
-      case 0x2F:
-        result = new GDSPlexRecord(rec);
+                break;
 
-        break;
+            case 0x2F:
+                result = new GDSPlexRecord(rec);
 
-      case 0x30:
-        result = new GDSBgnextnRecord(rec);
+                break;
 
-        break;
+            case 0x30:
+                result = new GDSBgnextnRecord(rec);
 
-      case 0x31:
-        result = new GDSEndextnRecord(rec);
+                break;
 
-        break;
+            case 0x31:
+                result = new GDSEndextnRecord(rec);
 
-      case 0x32:
-        result = new GDSTapenumRecord(rec);
+                break;
 
-        break;
+            case 0x32:
+                result = new GDSTapenumRecord(rec);
 
-      case 0x33:
-        result = new GDSTapecodeRecord(rec);
+                break;
 
-        break;
+            case 0x33:
+                result = new GDSTapecodeRecord(rec);
 
-      case 0x34:
-        result = new GDSStrclassRecord(rec);
+                break;
 
-        break;
+            case 0x34:
+                result = new GDSStrclassRecord(rec);
 
-      case 0x35:
-        result = new GDSReservedRecord(rec);
+                break;
 
-        break;
+            case 0x35:
+                result = new GDSReservedRecord(rec);
 
-      case 0x36:
-        result = new GDSFormatRecord(rec);
+                break;
 
-        break;
+            case 0x36:
+                result = new GDSFormatRecord(rec);
 
-      case 0x37:
-        result = new GDSMaskRecord(rec);
+                break;
 
-        break;
+            case 0x37:
+                result = new GDSMaskRecord(rec);
 
-      case 0x38:
-        result = new GDSEndmasksRecord(rec);
+                break;
 
-        break;
+            case 0x38:
+                result = new GDSEndmasksRecord(rec);
 
-      case 0x39:
-        result = new GDSLibdirsizeRecord(rec);
+                break;
 
-        break;
+            case 0x39:
+                result = new GDSLibdirsizeRecord(rec);
 
-      case 0x3A:
-        result = new GDSSrfnameRecord(rec);
+                break;
 
-        break;
+            case 0x3A:
+                result = new GDSSrfnameRecord(rec);
 
-      case 0x3B:
-        result = new GDSLibsecurRecord(rec);
+                break;
 
-        break;
+            case 0x3B:
+                result = new GDSLibsecurRecord(rec);
 
-      case 0x3C:
-        result = new GDSBorderRecord(rec);
+                break;
 
-        break;
+            case 0x3C:
+                result = new GDSBorderRecord(rec);
 
-      case 0x3D:
-        result = new GDSSoftfenceRecord(rec);
+                break;
 
-        break;
+            case 0x3D:
+                result = new GDSSoftfenceRecord(rec);
 
-      case 0x3E:
-        result = new GDSHardfenceRecord(rec);
+                break;
 
-        break;
+            case 0x3E:
+                result = new GDSHardfenceRecord(rec);
 
-      case 0x3F:
-        result = new GDSSoftwireRecord(rec);
+                break;
 
-        break;
+            case 0x3F:
+                result = new GDSSoftwireRecord(rec);
 
-      case 0x40:
-        result = new GDSHardwireRecord(rec);
+                break;
 
-        break;
+            case 0x40:
+                result = new GDSHardwireRecord(rec);
 
-      case 0x41:
-        result = new GDSPathportRecord(rec);
+                break;
 
-        break;
+            case 0x41:
+                result = new GDSPathportRecord(rec);
 
-      case 0x42:
-        result = new GDSNodeportRecord(rec);
+                break;
 
-        break;
+            case 0x42:
+                result = new GDSNodeportRecord(rec);
 
-      case 0x43:
-        result = new GDSUserconstraintRecord(rec);
+                break;
 
-        break;
+            case 0x43:
+                result = new GDSUserconstraintRecord(rec);
 
-      case 0x44:
-        result = new GDSSpacererrorRecord(rec);
+                break;
 
-        break;
+            case 0x44:
+                result = new GDSSpacererrorRecord(rec);
 
-      case 0x45:
-        result = new GDSContactRecord(rec);
+                break;
 
-        break;
+            case 0x45:
+                result = new GDSContactRecord(rec);
 
-      default:
-        result = new GDSNullRecord();
+                break;
 
-        break;
+            default:
+                result = new GDSNullRecord();
+
+                break;
+        }
+
+        return result;
+    } // end method expandRecord
+
+    /**
+     * Returns a string representation of this class
+     *
+     * @return  The physical address of this instance
+     */
+    @Override
+    public String toString() {
+        return super.toString();
     }
-
-    return result;
-  } // end method expandRecord
-
-  /**
-   * Returns a string representation of this class
-   *
-   * @return  The physical address of this instance
-   */
-  public String toString(){return super.toString();}
 } // end class GDSRecordFactory
-
 
 /* This material is distributed under the GNU General Public License.
  * For more information please go to http://www.gnu.org/copyleft/gpl.html */
