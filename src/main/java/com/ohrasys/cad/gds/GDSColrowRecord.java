@@ -151,8 +151,8 @@ public class GDSColrowRecord extends GDSRecord {
      */
     private byte[] updateData() {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        baos = GDSByteConverter.fromShort(this.numcol, baos);
-        baos = GDSByteConverter.fromShort(this.numrow, baos);
+        GDSByteConverter.fromShort(this.numcol, baos);
+        GDSByteConverter.fromShort(this.numrow, baos);
 
         return baos.toByteArray();
     }

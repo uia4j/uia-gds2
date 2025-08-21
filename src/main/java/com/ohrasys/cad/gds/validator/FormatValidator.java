@@ -1,4 +1,5 @@
-/* Copyright (C) 2004 Thomas N. Valine
+/*
+ * Copyright (C) 2004 Thomas N. Valine
  * tvaline@users.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or
@@ -8,21 +9,30 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA. */
+ * 02111-1307, USA.
+ */
 
 package com.ohrasys.cad.gds.validator;
 
-import com.ohrasys.cad.bnf.*;
-import com.ohrasys.cad.gds.*;
-import com.ohrasys.cad.gds.dao.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.*;
+import com.ohrasys.cad.bnf.BNFOneOfManyRequiredTest;
+import com.ohrasys.cad.bnf.BNFRequiredTest;
+import com.ohrasys.cad.bnf.BNFTestException;
+import com.ohrasys.cad.bnf.BNFTestImplementor;
+import com.ohrasys.cad.bnf.BNFTestableObject;
+import com.ohrasys.cad.gds.GDSFormatRecord;
+import com.ohrasys.cad.gds.GDSMaskRecord;
+import com.ohrasys.cad.gds.GDSRecord;
+import com.ohrasys.cad.gds.GDSSpecificDataConverter;
+import com.ohrasys.cad.gds.dao.Format;
 
 /**
  * A BachusNaur test for the GDSII &lt;format&gt; element.
@@ -31,66 +41,69 @@ import java.util.*;
  * @version  $Revision: 1.12 $
  * @since    1.5
  */
-public class FormatValidator
-extends BNFRequiredTest {
-  /**
-   * Creates a new FormatValidator object.
-   *
-   * @throws  BNFTestException  If an error in object creation occurs
-   */
-  public FormatValidator()
-    throws BNFTestException {
-    super(
-      new BNFTestImplementor[]{new BNFOneOfManyRequiredTest(
-          new BNFTestImplementor[]{
-            new ExtendedFormatBodyValidator(),
-            new BasicFormatBodyValidator()
-          })});
-  }
+public class FormatValidator extends BNFRequiredTest {
 
-  /**
-   * A method to collect Format data during parsing
-   *
-   * @return  A list containing a Format object
-   */
-  public Object collect() {
-    List<Format> result   = new ArrayList<Format>();
-    List<Object> retValue = (List<Object>)super.collect();
-    retValue = GDSSpecificDataConverter.flattenList(new ArrayList<Object>(),
-        retValue);
-    List<String> masks  = null;
-    Format       format = new Format();
-    for(int i = 0;i < retValue.size();i++) {
-      GDSRecord rec = (GDSRecord)((BNFTestableObject)retValue.get(i))
-          .getData();
-      switch(rec.getRectype()) {
-        case GDSRecord.FORMAT:
-          format.setType(((GDSFormatRecord)rec).getFormat());
-          break;
-
-        case GDSRecord.MASK:
-          if(masks == null){masks = new ArrayList<String>();}
-          masks.add(((GDSMaskRecord)rec).getMask());
-          break;
-
-        default:
-          break;
-      }
+    /**
+     * Creates a new FormatValidator object.
+     *
+     * @throws  BNFTestException  If an error in object creation occurs
+     */
+    public FormatValidator() throws BNFTestException {
+        super(
+                new BNFTestImplementor[] { new BNFOneOfManyRequiredTest(
+                        new BNFTestImplementor[] {
+                                new ExtendedFormatBodyValidator(),
+                                new BasicFormatBodyValidator()
+                        }) });
     }
-    format.setMasks(masks.toArray(new String[masks.size()]));
-    result.add(format);
 
-    return result;
-  } // end method collect
+    /**
+     * A method to collect Format data during parsing
+     *
+     * @return  A list containing a Format object
+     */
+    @Override
+    public Object collect() {
+        List<Format> result = new ArrayList<Format>();
+        List<Object> retValue = (List<Object>) super.collect();
+        retValue = GDSSpecificDataConverter.flattenList(new ArrayList<Object>(), retValue);
+        List<String> masks = null;
+        Format format = new Format();
+        for (int i = 0; i < retValue.size(); i++) {
+            GDSRecord rec = (GDSRecord) ((BNFTestableObject) retValue.get(i))
+                    .getData();
+            switch (rec.getRectype()) {
+                case GDSRecord.FORMAT:
+                    format.setType(((GDSFormatRecord) rec).getFormat());
+                    break;
 
-  /**
-   * Returns a string representation of this validator
-   *
-   * @return  The physical address of this object
-   */
-  public String toString(){return super.toString();}
+                case GDSRecord.MASK:
+                    if (masks == null) {
+                        masks = new ArrayList<String>();
+                    }
+                    masks.add(((GDSMaskRecord) rec).getMask());
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        format.setMasks(masks.toArray(new String[masks.size()]));
+        result.add(format);
+
+        return result;
+    } // end method collect
+
+    /**
+     * Returns a string representation of this validator
+     *
+     * @return  The physical address of this object
+     */
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 } // end class FormatValidator
-
 
 /* This material is distributed under the GNU General Public License.
  * For more information please go to http://www.gnu.org/copyleft/gpl.html */

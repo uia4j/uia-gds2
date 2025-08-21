@@ -1,4 +1,5 @@
-/* Copyright (C) 2004 Thomas N. Valine
+/*
+ * Copyright (C) 2004 Thomas N. Valine
  * tvaline@users.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or
@@ -8,28 +9,63 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA. */
+ * 02111-1307, USA.
+ */
 
 package com.ohrasys.cad.gds.swing;
 
-import com.ohrasys.cad.gds.*;
-import com.ohrasys.cad.gds.dao.*;
+import java.awt.AWTEvent;
+import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PipedInputStream;
+import java.io.PipedOutputStream;
+import java.io.PrintWriter;
+import java.util.ResourceBundle;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.io.*;
-import java.util.*;
-import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.event.*;
-import javax.swing.text.*;
-import javax.swing.tree.*;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.SwingConstants;
+import javax.swing.ToolTipManager;
+import javax.swing.event.EventListenerList;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+
+import com.ohrasys.cad.gds.GDSParser;
+import com.ohrasys.cad.gds.dao.Database;
+import com.ohrasys.cad.gds.dao.InfoProvider;
 
 /**
  * A lightweight GDSII browser Swing component.
@@ -37,576 +73,245 @@ import javax.swing.tree.*;
  * @author   $Author: tvaline $
  * @version  $Revision: 1.20 $, $Date: 2005/05/18 18:22:38 $
  */
-public class JGDSBrowser
-extends JComponent
-implements TreeSelectionListener {
-  /** Indicates the control panel should be embedded within the component */
-  public static final int EXPLICIT_CONTROL = 0;
+public class JGDSBrowser extends JComponent implements TreeSelectionListener {
 
-  /** Indicates the control panel is available via a popup menu */
-  public static final int IMPLICIT_CONTROL = 1;
+    /**
+     *
+     */
+    private static final long serialVersionUID = 4365989705416348804L;
 
-  /** Indicates component control is available only via programmatic means */
-  public static final int PROGRAMMATIC_CONTROL = 2;
+    /** Indicates the control panel should be embedded within the component */
+    public static final int EXPLICIT_CONTROL = 0;
 
-  /** The resource bundle */
-  private static final String bundle =
-    "com/ohrasys/cad/gds/swing/JGDSSwingProperties" /* NOI18N */;
+    /** Indicates the control panel is available via a popup menu */
+    public static final int IMPLICIT_CONTROL = 1;
 
-  /** The thread used to update the component text area */
-  private Thread consumer;
+    /** Indicates component control is available only via programmatic means */
+    public static final int PROGRAMMATIC_CONTROL = 2;
 
-  /**
-   * A popup menu for displaying the control panel when in IMPLICIT_CONTROL mode
-   */
-  private JPopupMenu controlMenu;
+    /** The resource bundle */
+    private static final String bundle = "com/ohrasys/cad/gds/swing/JGDSSwingProperties" /* NOI18N */;
 
-  /**
-   * Indicates by what mode JGDSParser is controlled.  Must be one of
-   * EXPLICIT_CONTROL where the control panel is embedded in the component,
-   * IMPLICIT_CONTROL where the control panel is available via a popup menu,
-   * PROGRAMMATIC_CONTROL where the control of JGDSParser must be done using
-   * programmatic methods.
-   */
-  private int controlMode;
+    /** The thread used to update the component text area */
+    private Thread consumer;
 
-  /**
-   * The control panel containing pointers to the GDS and log files as well as
-   * buttons to begin and interrupt parsing
-   */
-  private JGDSBrowserControlPanel controlPanel;
+    /**
+     * A popup menu for displaying the control panel when in IMPLICIT_CONTROL mode
+     */
+    private JPopupMenu controlMenu;
 
-  /** The frame used to display the control panel when in IMPLICIT_MODE */
-  private JFrame controlPanelFrame;
+    /**
+     * Indicates by what mode JGDSParser is controlled.  Must be one of
+     * EXPLICIT_CONTROL where the control panel is embedded in the component,
+     * IMPLICIT_CONTROL where the control panel is available via a popup menu,
+     * PROGRAMMATIC_CONTROL where the control of JGDSParser must be done using
+     * programmatic methods.
+     */
+    private int controlMode;
 
-  /** The resource bundle */
-  private ResourceBundle i18n;
+    /**
+     * The control panel containing pointers to the GDS and log files as well as
+     * buttons to begin and interrupt parsing
+     */
+    private JGDSBrowserControlPanel controlPanel;
 
-  /**
-   * The piped input stream used to redirect parser data to the component text
-   * area
-   */
-  private PipedInputStream in;
+    /** The frame used to display the control panel when in IMPLICIT_MODE */
+    private JFrame controlPanelFrame;
 
-  /**
-   * The list of ActionListeners that are listening to events from this
-   * component
-   */
-  private EventListenerList listenerList;
+    /** The resource bundle */
+    private ResourceBundle i18n;
 
-  /**
-   * The piped output stream used to redirect parser data to the component text
-   * area
-   */
-  private PipedOutputStream out;
+    /**
+     * The piped input stream used to redirect parser data to the component text
+     * area
+     */
+    private PipedInputStream in;
 
-  /** The GDS file parser */
-  private GDSParser parser;
+    /**
+     * The list of ActionListeners that are listening to events from this
+     * component
+     */
+    private EventListenerList listenerList;
 
-  /** The worker thread used to execute the parser */
-  private Thread producer;
+    /**
+     * The piped output stream used to redirect parser data to the component text
+     * area
+     */
+    private PipedOutputStream out;
 
-  /** List of records retrieved from the GDS file */
-  private java.util.List records;
+    /** The GDS file parser */
+    private GDSParser parser;
 
-  /** The split planes between the tree and text areas */
-  private JSplitPane split, textScroll;
+    /** The worker thread used to execute the parser */
+    private Thread producer;
 
-  /** The text area used to display database info */
-  private JTextPane textArea;
+    /** List of records retrieved from the GDS file */
+    private java.util.List records;
 
-  /** The text area used to display parser information */
-  private JGDSBrowserTree tree;
+    /** The split planes between the tree and text areas */
+    private JSplitPane split;
 
-  /** The top of the GDS browser tree */
-  private DefaultMutableTreeNode treeTop;
+    /** The text area used to display database info */
+    private JTextPane textArea;
 
-  /** The thread used to populate the browser tree */
-  private Thread updater;
+    /** The text area used to display parser information */
+    private JGDSBrowserTree tree;
 
-  /**
-   * Creates a new JGDSParser object with control panel embedded in the
-   * component.
-   */
-  public JGDSBrowser(){this(null, null, EXPLICIT_CONTROL);}
+    /** The top of the GDS browser tree */
+    private DefaultMutableTreeNode treeTop;
 
-  /**
-   * Creates a new JGDSParser object.
-   *
-   * @param  controlMode  One of EXPLICIT_CONTROL, IMPLICIT_CONTROL or
-   *                      PROGRAMMATIC_CONTROL indicating whether the components
-   *                      controls are available as an embedded control panel, a
-   *                      popup control panel, or only via program control.
-   */
-  public JGDSBrowser(int controlMode){this(null, null, controlMode);}
+    /** The thread used to populate the browser tree */
+    private Thread updater;
 
-  /**
-   * Creates a new JGDSParser object with control panel embedded in the
-   * component.
-   *
-   * @param  gdsfile  The initial GDS file to parse.
-   */
-  public JGDSBrowser(String gdsfile){this(gdsfile, null, EXPLICIT_CONTROL);}
-
-  /**
-   * Creates a new JGDSParser object.
-   *
-   * @param  gdsfile      The initial GDS file to parse.
-   * @param  controlMode  One of EXPLICIT_CONTROL, IMPLICIT_CONTROL or
-   *                      PROGRAMMATIC_CONTROL indicating whether the components
-   *                      controls are available as an embedded control panel, a
-   *                      popup control panel, or only via program control.
-   */
-  public JGDSBrowser(String gdsfile, int controlMode) {
-    this(gdsfile, null, controlMode);
-  }
-
-  /**
-   * Creates a new JGDSParser object with control panel embedded in the
-   * component.
-   *
-   * @param  gdsfile  The inital GDS file to parse.
-   * @param  logfile  The log file.
-   */
-  public JGDSBrowser(String gdsfile, String logfile) {
-    this(gdsfile, logfile, EXPLICIT_CONTROL);
-  }
-
-  /**
-   * Creates a new JGDSParser object.
-   *
-   * @param   gdsfile      The GDS file to parse.
-   * @param   logfile      The log file to use.
-   * @param   controlMode  One of EXPLICIT_CONTROL, IMPLICIT_CONTROL or
-   *                       PROGRAMMATIC_CONTROL indicating whether the
-   *                       components controls are available as an embedded
-   *                       control panel, a popup control panel, or only via
-   *                       program control.
-   *
-   * @throws  IllegalArgumentException  If controlMode is not an allowed value.
-   */
-  public JGDSBrowser(String gdsfile, String logfile, int controlMode) {
-    if((EXPLICIT_CONTROL > controlMode) ||
-        (controlMode > PROGRAMMATIC_CONTROL)) {
-      throw new IllegalArgumentException();
+    /**
+     * Creates a new JGDSParser object with control panel embedded in the
+     * component.
+     */
+    public JGDSBrowser() {
+        this(null, null, EXPLICIT_CONTROL);
     }
 
-    this.controlMode = controlMode;
-    i18n             = ResourceBundle.getBundle(bundle);
-    initComponents();
-    setGds(gdsfile);
-    setLog(logfile);
-    listenerList = null;
-  }
-
-  /**
-   * Registers ActionListener to receive events.
-   *
-   * @param  listener  The listener to register.
-   */
-  public synchronized void addActionListener(ActionListener listener) {
-    if(listenerList == null){listenerList = new EventListenerList();}
-
-    listenerList.add(ActionListener.class, listener);
-  }
-
-  /**
-   * Returns the current GDS file location
-   *
-   * @return  The current GDS file location
-   */
-  public String getGds(){return controlPanel.gdsField.getText();}
-
-  /**
-   * Returns the current log file location
-   *
-   * @return  The current log file location
-   */
-  public String getLog(){return controlPanel.logField.getText();}
-
-  /** Interrupts the parser */
-  public void interruptParser(){controlPanel.exitButton.doClick();}
-
-  /** Parses the currently specified GDS file set using the setGds method. */
-  public void parseDesign(){controlPanel.parseButton.doClick();}
-
-  /**
-   * Removes ActionListener from the list of listeners.
-   *
-   * @param  listener  The listener to remove.
-   */
-  public synchronized void removeActionListener(ActionListener listener) {
-    listenerList.remove(ActionListener.class, listener);
-  }
-
-  /**
-   * Sets the GDS file to parse
-   *
-   * @param  gds  The path to the GDS file to parse.
-   */
-  public void setGds(String gds) {
-    controlPanel.gdsField.setText(gds);
-    fireActionListenerActionPerformed(new ActionEvent(this, 0, null));
-  }
-
-  /**
-   * Sets the logfile for the parser.  If null, the standard output is used.
-   *
-   * @param  log  The path to the log file.
-   */
-  public void setLog(String log) {
-    controlPanel.logField.setText(log);
-    fireActionListenerActionPerformed(new ActionEvent(this, 0, null));
-  }
-
-  /**
-   * Returns a string representation of the object
-   *
-   * @return  The physical address of the instance
-   */
-  public String toString(){return super.toString();}
-
-  /**
-   * Method used to update the text area in response to a tree event
-   *
-   * @param  evt  The tree event initiating the change
-   */
-  public void valueChanged(TreeSelectionEvent evt) {
-    DefaultMutableTreeNode node = (DefaultMutableTreeNode)tree
-        .getLastSelectedPathComponent();
-    if(node == null){return;}
-    Object obj = node.getUserObject();
-    if((obj != null) && (obj instanceof InfoProvider)) {
-      textArea.setText(((InfoProvider)obj).getInfo());
+    /**
+     * Creates a new JGDSParser object.
+     *
+     * @param  controlMode  One of EXPLICIT_CONTROL, IMPLICIT_CONTROL or
+     *                      PROGRAMMATIC_CONTROL indicating whether the components
+     *                      controls are available as an embedded control panel, a
+     *                      popup control panel, or only via program control.
+     */
+    public JGDSBrowser(int controlMode) {
+        this(null, null, controlMode);
     }
-  }
 
-  /**
-   * Displays a message dialog if the component is visible
-   *
-   * @param  message  The message to display
-   */
-  private void displayDialog(String message) {
-    if(isVisible()) {
-      final String msg = message;
-      new Thread(new Runnable() {
-          public void run(){JOptionPane.showMessageDialog(null, msg);}
-        }).start();
+    /**
+     * Creates a new JGDSParser object with control panel embedded in the
+     * component.
+     *
+     * @param  gdsfile  The initial GDS file to parse.
+     */
+    public JGDSBrowser(String gdsfile) {
+        this(gdsfile, null, EXPLICIT_CONTROL);
     }
-  }
 
-  /**
-   * Notify listeners that an action has occured
-   *
-   * @param  event  The event representing the action
-   */
-  private void fireActionListenerActionPerformed(ActionEvent event) {
-    if(listenerList == null){return;}
-
-    Object listeners[] = listenerList.getListenerList();
-
-    for(int i = listeners.length - 2;i >= 0;i -= 2) {
-      if(listeners[i] == ActionListener.class) {
-        ((ActionListener)listeners[i + 1]).actionPerformed(event);
-      }
+    /**
+     * Creates a new JGDSParser object.
+     *
+     * @param  gdsfile      The initial GDS file to parse.
+     * @param  controlMode  One of EXPLICIT_CONTROL, IMPLICIT_CONTROL or
+     *                      PROGRAMMATIC_CONTROL indicating whether the components
+     *                      controls are available as an embedded control panel, a
+     *                      popup control panel, or only via program control.
+     */
+    public JGDSBrowser(String gdsfile, int controlMode) {
+        this(gdsfile, null, controlMode);
     }
-  }
 
-  /** A method to initialize the sub-components of JGDSParser */
-  private void initComponents() {
-    controlPanel   = new JGDSBrowserControlPanel();
-    tree           = new JGDSBrowserTree();
-    tree.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5,
-        tree.getBackground()));
-    tree.addTreeSelectionListener(this);
-    textArea = new JTextPane();
-    JScrollPane scroller   = new JScrollPane(tree);
-    JScrollPane textScroll = new JScrollPane(textArea);
-    split = new JSplitPane();
-    split.setOneTouchExpandable(true);
-    split.add(scroller, split.LEFT, 0);
-    split.add(textScroll, split.RIGHT, 1);
-    setLayout(new BorderLayout());
-    add(split, BorderLayout.CENTER);
-    switch(controlMode) {
-      case (EXPLICIT_CONTROL):
-        add(controlPanel, BorderLayout.SOUTH);
-        break;
-
-      case (IMPLICIT_CONTROL):
-        ToolTipManager.sharedInstance().registerComponent(tree);
-        tree.addMouseListener(new JGDSBrowserPaneMouseAdapter());
-        break;
-
-      default:
-        controlPanel.setVisible(false);
+    /**
+     * Creates a new JGDSParser object with control panel embedded in the
+     * component.
+     *
+     * @param  gdsfile  The inital GDS file to parse.
+     * @param  logfile  The log file.
+     */
+    public JGDSBrowser(String gdsfile, String logfile) {
+        this(gdsfile, logfile, EXPLICIT_CONTROL);
     }
-  } // end method initComponents
 
-  /**
-   * A method for processing incoming control panel events
-   *
-   * @param  evt  The event to process
-   */
-  private void processControlEvent(AWTEvent evt) {
-    Object       src     = evt.getSource();
-    final String gdsfile = controlPanel.gdsField.getText();
-    final String logfile = controlPanel.logField.getText();
-    if(src.equals(controlPanel.parseButton)) {
-      if((producer != null) || (consumer != null)) {
-        displayDialog(i18n.getString(
-            "JGDSPARSER_RUNNING" /* NOI18N */));
-      } else {
-        records        = null;
-        producer       = new Thread(new Runnable() {
-              public void run() {
-                /* Build the output stream */
-                out = new PipedOutputStream();
-
-                synchronized(consumer) {
-                  consumer.notifyAll();
-                }
-
-                /* Wait for the consumer to notify us that the input stream has been created */
-                synchronized(producer) {
-                  while(in == null) {
-                    try {
-                      producer.wait();
-                    } catch(InterruptedException ex) {
-                      ex.printStackTrace();
-
-                      break;
-                    }
-                  }
-                }
-
-                /* It's now safe to parse the design */
-                parser = new GDSParser();
-                parser.setCollecting(true);
-                records = parser.parseDesign(new File(gdsfile), out);
-                synchronized(updater) {
-                  if(records == null){updater.interrupt();}
-                  else{updater.notifyAll();}
-                }
-
-                /* Wait for the consumer to notify us that processing is done */
-                synchronized(producer) {
-                  while(in != null) {
-                    try {
-                      producer.wait();
-                    } catch(InterruptedException ex) {
-                      ex.printStackTrace();
-
-                      break;
-                    }
-                  }
-                }
-
-                /* Close the and delete the output stream */
-                out = null;
-
-                synchronized(consumer) {
-                  consumer.notifyAll();
-                }
-
-                /* Wait until the consumer exits */
-                synchronized(producer) {
-                  while(consumer != null) {
-                    try {
-                      producer.wait();
-                    } catch(InterruptedException ex) {
-                      ex.printStackTrace();
-
-                      break;
-                    }
-                  }
-                }
-
-                /* Delete ourself */
-                producer = null;
-              } // end method run
-            });
-        consumer       = new Thread(new Runnable() {
-              public void run() {
-                /* Wait for the output stream */
-                synchronized(consumer) {
-                  while(out == null) {
-                    try {
-                      consumer.wait();
-                    } catch(InterruptedException ex) {
-                      ex.printStackTrace();
-
-                      break;
-                    }
-                  }
-                }
-
-                /* Create the input stream */
-                try {
-                  in = new PipedInputStream(out);
-                } catch(IOException ex) {
-                  ex.printStackTrace();
-                }
-
-                BufferedReader br = new BufferedReader(new InputStreamReader(
-                      in));
-                PrintWriter    fw = null;
-
-                if((logfile != null) &&
-                    (logfile.trim().length() > 0)) {
-                  try {
-                    fw = new PrintWriter(new File(
-                          logfile));
-                  } catch(IOException ex) {
-                    /* can't do anything now */
-                  }
-                }
-
-                /* Notify the producer that the input stream is ready */
-                synchronized(producer) {
-                  producer.notifyAll();
-                }
-
-                /* Read parser data until the end of stream is reached */
-                String line = null;
-
-                try {
-                  while((line = br.readLine()) != null) {
-                    if(fw != null){fw.print(line + "\n" /* NOI18N */);}
-                  }
-                } catch(IOException ex) {
-                  /* can't do anything now */
-                }
-
-                /* Close and delete the input streams */
-                try {
-                  if(fw != null){fw.close();}
-
-                  br.close();
-                  in.close();
-                } catch(IOException ex) {
-                  ex.printStackTrace();
-                }
-
-                in = null;
-
-                /* Notify the producer that all the data has been read */
-                synchronized(producer) {
-                  producer.notifyAll();
-                }
-
-                /* Wait until the output stream is deleted */
-                synchronized(consumer) {
-                  while(out != null) {
-                    try {
-                      consumer.wait();
-                    } catch(InterruptedException ex) {
-                      ex.printStackTrace();
-
-                      break;
-                    }
-                  }
-                }
-
-                consumer = null;
-
-                /* Delete our self and notify the producer that were finished */
-                synchronized(producer) {
-                  producer.notifyAll();
-                }
-              } // end method run
-            });
-        updater = new Thread(new Runnable() {
-              public void run() {
-                treeTop = new DefaultMutableTreeNode(i18n.getString(
-                      "JGDSBROWSER_PARSING" /*NOI18N*/));
-                tree.setModel(new DefaultTreeModel(treeTop));
-                synchronized(updater) {
-                  while(records == null) {
-                    try {
-                      updater.wait();
-                    } catch(InterruptedException ex) {
-                      break;
-                    }
-                  }
-                }
-                String rootName;
-                treeTop = new DefaultMutableTreeNode();
-                if(records != null){tree.buildTree((Database)records.get(0));}
-                else {
-                  tree.setModel(new DefaultTreeModel(
-                      new DefaultMutableTreeNode()));
-                }
-              }
-            });
-        producer.start();
-        consumer.start();
-        updater.start();
-      } // end if
-    } else if(src.equals(controlPanel.exitButton)) {
-      if(producer != null) {
-        producer.interrupt();
-
-        try {
-          producer.join();
-        } catch(InterruptedException ex) {
-          /* can't do anything now */
+    /**
+     * Creates a new JGDSParser object.
+     *
+     * @param   gdsfile      The GDS file to parse.
+     * @param   logfile      The log file to use.
+     * @param   controlMode  One of EXPLICIT_CONTROL, IMPLICIT_CONTROL or
+     *                       PROGRAMMATIC_CONTROL indicating whether the
+     *                       components controls are available as an embedded
+     *                       control panel, a popup control panel, or only via
+     *                       program control.
+     *
+     * @throws  IllegalArgumentException  If controlMode is not an allowed value.
+     */
+    public JGDSBrowser(String gdsfile, String logfile, int controlMode) {
+        if ((EXPLICIT_CONTROL > controlMode) ||
+                (controlMode > PROGRAMMATIC_CONTROL)) {
+            throw new IllegalArgumentException();
         }
-      }
+
+        this.controlMode = controlMode;
+        this.i18n = ResourceBundle.getBundle(bundle);
+        initComponents();
+        setGds(gdsfile);
+        setLog(logfile);
+        this.listenerList = null;
     }
-  } // end method processControlEvent
-
-  /**
-   * The control panel class used to set the GDS and log file names as well as
-   * beginning and interrupting parsing
-   *
-   * @author   $Author: tvaline $
-   * @version  $Revision: 1.20 $, $Date: 2005/05/18 18:22:38 $
-   */
-  private final class JGDSBrowserControlPanel
-  extends JPanel {
-    /** The button used to interrupt parsing */
-    private JButton exitButton;
-
-    /** The file chooser used to select the GDS and log files */
-    private JFileChooser fc;
-
-    /** The file filter used to filter in only GDS files */
-    private JGDSBrowserFileFilter ff;
 
     /**
-     * The frame used to display the controll panel when in IMPLICIT_CONTROL
-     * mode
+     * Registers ActionListener to receive events.
+     *
+     * @param  listener  The listener to register.
      */
-    private JFrame frame;
+    public synchronized void addActionListener(ActionListener listener) {
+        if (this.listenerList == null) {
+            this.listenerList = new EventListenerList();
+        }
 
-    /** The button used to select the GDS file using the file chooser */
-    private JButton gdsButton;
-
-    /** The text field containing the GDS file name */
-    private JTextField gdsField;
-
-    /** The label for the GDS text field */
-    private JLabel gdsLabel;
-
-    /** The button used to select the log file using the file chooser */
-    private JButton logButton;
-
-    /** The text field containing the log file name */
-    private JTextField logField;
-
-    /** The label for the log file text field */
-    private JLabel logLabel;
-
-    /** The button used to begin parsing */
-    private JButton parseButton;
+        this.listenerList.add(ActionListener.class, listener);
+    }
 
     /**
-     * Creates a new JGDSParserControlPanel object.
+     * Returns the current GDS file location
+     *
+     * @return  The current GDS file location
      */
-    private JGDSBrowserControlPanel() {
-      super();
-      initComponents();
+    public String getGds() {
+        return this.controlPanel.gdsField.getText();
+    }
+
+    /**
+     * Returns the current log file location
+     *
+     * @return  The current log file location
+     */
+    public String getLog() {
+        return this.controlPanel.logField.getText();
+    }
+
+    /** Interrupts the parser */
+    public void interruptParser() {
+        this.controlPanel.exitButton.doClick();
+    }
+
+    /** Parses the currently specified GDS file set using the setGds method. */
+    public void parseDesign() {
+        this.controlPanel.parseButton.doClick();
+    }
+
+    /**
+     * Removes ActionListener from the list of listeners.
+     *
+     * @param  listener  The listener to remove.
+     */
+    public synchronized void removeActionListener(ActionListener listener) {
+        this.listenerList.remove(ActionListener.class, listener);
+    }
+
+    /**
+     * Sets the GDS file to parse
+     *
+     * @param  gds  The path to the GDS file to parse.
+     */
+    public void setGds(String gds) {
+        this.controlPanel.gdsField.setText(gds);
+        fireActionListenerActionPerformed(new ActionEvent(this, 0, null));
+    }
+
+    /**
+     * Sets the logfile for the parser.  If null, the standard output is used.
+     *
+     * @param  log  The path to the log file.
+     */
+    public void setLog(String log) {
+        this.controlPanel.logField.setText(log);
+        fireActionListenerActionPerformed(new ActionEvent(this, 0, null));
     }
 
     /**
@@ -614,335 +319,778 @@ implements TreeSelectionListener {
      *
      * @return  The physical address of the instance
      */
-    public String toString(){return super.toString();}
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 
-    /** A method to initialize the sub-components of the control panel */
+    /**
+     * Method used to update the text area in response to a tree event
+     *
+     * @param  evt  The tree event initiating the change
+     */
+    @Override
+    public void valueChanged(TreeSelectionEvent evt) {
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) this.tree
+                .getLastSelectedPathComponent();
+        if (node == null) {
+            return;
+        }
+        Object obj = node.getUserObject();
+        if ((obj != null) && (obj instanceof InfoProvider)) {
+            this.textArea.setText(((InfoProvider) obj).getInfo());
+        }
+    }
+
+    /**
+     * Displays a message dialog if the component is visible
+     *
+     * @param  message  The message to display
+     */
+    private void displayDialog(String message) {
+        if (isVisible()) {
+            final String msg = message;
+            new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    JOptionPane.showMessageDialog(null, msg);
+                }
+            }).start();
+        }
+    }
+
+    /**
+     * Notify listeners that an action has occured
+     *
+     * @param  event  The event representing the action
+     */
+    private void fireActionListenerActionPerformed(ActionEvent event) {
+        if (this.listenerList == null) {
+            return;
+        }
+
+        Object listeners[] = this.listenerList.getListenerList();
+
+        for (int i = listeners.length - 2; i >= 0; i -= 2) {
+            if (listeners[i] == ActionListener.class) {
+                ((ActionListener) listeners[i + 1]).actionPerformed(event);
+            }
+        }
+    }
+
+    /** A method to initialize the sub-components of JGDSParser */
     private void initComponents() {
-      GridBagConstraints gridBagConstraints;
-      ff          = new JGDSBrowserFileFilter(
-          i18n.getString("JGDSPARSER_GDSFILES" /* NOI18N */) +
-          "(*.gds, *.gds2, *.db, *.sf)" /* NOI18N */,
-          new String[]{
-            "gds2" /* NOI18N */,
-            "db" /* NOI18N */,
-            "gds" /* NOI18N */,
-            "sf" /* NOI18N */
-          }, true);
-      gdsLabel    = new JLabel();
-      gdsField    = new JTextField();
-      gdsButton   = new JButton();
-      logLabel    = new JLabel();
-      logField    = new JTextField();
-      logButton   = new JButton();
-      parseButton = new JButton();
-      exitButton  = new JButton();
-      setLayout(new GridBagLayout());
-      gdsLabel.setText(i18n.getString("JGDSPARSER_GDS" /* NOI18N */));
-      gridBagConstraints         = new GridBagConstraints();
-      gridBagConstraints.fill    = GridBagConstraints.HORIZONTAL;
-      gridBagConstraints.insets  = new Insets(10, 10, 0, 0);
-      gridBagConstraints.anchor  = GridBagConstraints.NORTHWEST;
-      gridBagConstraints.weightx = 1.0;
-      add(gdsLabel, gridBagConstraints);
-      gdsField.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent evt) {
-            processControlEvent(evt);
-          }
-        });
-      gdsField.addFocusListener(new FocusAdapter() {
-          public void focusLost(FocusEvent evt){processControlEvent(evt);}
-        });
-      gdsField.setColumns(48);
-      gdsField.setToolTipText(i18n.getString(
-          "JGDSPARSER_ENT_GDS" /* NOI18N */));
-      gridBagConstraints           = new GridBagConstraints();
-      gridBagConstraints.gridx     = 0;
-      gridBagConstraints.gridy     = 1;
-      gridBagConstraints.gridwidth = 7;
-      gridBagConstraints.fill      = GridBagConstraints.BOTH;
-      gridBagConstraints.insets    = new Insets(0, 10, 0, 0);
-      gridBagConstraints.anchor    = GridBagConstraints.NORTHWEST;
-      gridBagConstraints.weightx   = 0.7;
-      add(gdsField, gridBagConstraints);
-      gdsButton.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent evt) {
-            if(fc == null) {
-              fc = new JFileChooser();
-              fc.setFileSelectionMode(fc.FILES_ONLY);
-            }
+        this.controlPanel = new JGDSBrowserControlPanel();
+        this.tree = new JGDSBrowserTree();
+        this.tree.setBorder(BorderFactory.createMatteBorder(5, 5, 5, 5,
+                this.tree.getBackground()));
+        this.tree.addTreeSelectionListener(this);
+        this.textArea = new JTextPane();
+        JScrollPane scroller = new JScrollPane(this.tree);
+        JScrollPane textScroll = new JScrollPane(this.textArea);
+        this.split = new JSplitPane();
+        this.split.setOneTouchExpandable(true);
+        this.split.add(scroller, this.split.LEFT, 0);
+        this.split.add(textScroll, this.split.RIGHT, 1);
+        setLayout(new BorderLayout());
+        add(this.split, BorderLayout.CENTER);
+        switch (this.controlMode) {
+            case (EXPLICIT_CONTROL):
+                add(this.controlPanel, BorderLayout.SOUTH);
+                break;
 
-            fc.addChoosableFileFilter(ff);
-            fc.setAcceptAllFileFilterUsed(true);
-            fc.setFileFilter(ff);
+            case (IMPLICIT_CONTROL):
+                ToolTipManager.sharedInstance().registerComponent(this.tree);
+                this.tree.addMouseListener(new JGDSBrowserPaneMouseAdapter());
+                break;
 
-            int result = fc.showDialog(null,
-                i18n.getString(
-                  "JGDSPARSER_SEL_GDS" /* NOI18N */));
-
-            if(result == fc.APPROVE_OPTION) {
-              gdsField.setText(fc.getSelectedFile().getAbsolutePath());
-              processControlEvent(evt);
-            }
-          }
-        });
-      gdsButton.setText("..." /*NOI18N*/);
-      gdsButton.setToolTipText(i18n.getString(
-          "JGDSPARSER_BROWSE_GDS" /* NOI18N */));
-      gridBagConstraints        = new GridBagConstraints();
-      gridBagConstraints.gridx  = 7;
-      gridBagConstraints.gridy  = 1;
-      gridBagConstraints.insets = new Insets(0, 0, 0, 10);
-      gridBagConstraints.anchor = GridBagConstraints.WEST;
-      add(gdsButton, gridBagConstraints);
-      logLabel.setText(i18n.getString("JGDSPARSER_LOG" /* NOI18N */));
-      gridBagConstraints         = new GridBagConstraints();
-      gridBagConstraints.gridx   = 0;
-      gridBagConstraints.gridy   = 2;
-      gridBagConstraints.fill    = GridBagConstraints.HORIZONTAL;
-      gridBagConstraints.insets  = new Insets(0, 10, 0, 0);
-      gridBagConstraints.anchor  = GridBagConstraints.NORTHWEST;
-      gridBagConstraints.weightx = 1.0;
-      add(logLabel, gridBagConstraints);
-      logField.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent evt) {
-            processControlEvent(evt);
-          }
-        });
-      logField.addFocusListener(new FocusAdapter() {
-          public void focusLost(FocusEvent evt){processControlEvent(evt);}
-        });
-      logField.setColumns(48);
-      logField.setToolTipText(i18n.getString(
-          "JGDSPARSER_ENT_LOG" /* NOI18N */));
-      gridBagConstraints           = new GridBagConstraints();
-      gridBagConstraints.gridx     = 0;
-      gridBagConstraints.gridy     = 3;
-      gridBagConstraints.gridwidth = 7;
-      gridBagConstraints.fill      = GridBagConstraints.BOTH;
-      gridBagConstraints.insets    = new Insets(0, 10, 10, 0);
-      gridBagConstraints.anchor    = GridBagConstraints.NORTHWEST;
-      gridBagConstraints.weightx   = 1.0;
-      add(logField, gridBagConstraints);
-      logButton.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent evt) {
-            if(fc == null) {
-              fc = new JFileChooser();
-              fc.setFileSelectionMode(fc.FILES_ONLY);
-            }
-
-            fc.removeChoosableFileFilter(ff);
-            fc.setAcceptAllFileFilterUsed(true);
-
-            int result = fc.showDialog(null,
-                i18n.getString(
-                  "JGDSPARSER_SEL_LOG" /* NOI18N */));
-
-            if(result == fc.APPROVE_OPTION) {
-              logField.setText(fc.getSelectedFile().getAbsolutePath());
-              processControlEvent(evt);
-            }
-          }
-        });
-      logButton.setText("..." /*NOI18N*/);
-      logButton.setToolTipText(i18n.getString(
-          "JGDSPARSER_BROWSE_LOG" /* NOI18N */));
-      gridBagConstraints        = new GridBagConstraints();
-      gridBagConstraints.gridx  = 7;
-      gridBagConstraints.gridy  = 3;
-      gridBagConstraints.insets = new Insets(0, 0, 10, 10);
-      gridBagConstraints.anchor = GridBagConstraints.WEST;
-      add(logButton, gridBagConstraints);
-      parseButton.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent evt) {
-            processControlEvent(evt);
-          }
-        });
-      exitButton.setMnemonic(KeyEvent.VK_C);
-      exitButton.setText(i18n.getString("JGDSBROWSER_STOP" /* NOI18N */));
-      exitButton.setHorizontalTextPosition(SwingConstants.CENTER);
-      exitButton.setToolTipText(i18n.getString(
-          "JGDSBROWSER_CANCEL" /* NOI18N */));
-      gridBagConstraints        = new GridBagConstraints();
-      gridBagConstraints.gridx  = 8;
-      gridBagConstraints.gridy  = 3;
-      gridBagConstraints.insets = new Insets(0, 10, 10, 10);
-      gridBagConstraints.anchor = GridBagConstraints.WEST;
-      gridBagConstraints.fill   = GridBagConstraints.HORIZONTAL;
-      add(exitButton, gridBagConstraints);
-      parseButton.setMnemonic(KeyEvent.VK_L);
-      parseButton.setText(i18n.getString(
-          "JGDSBROWSER_START" /* NOI18N */));
-      parseButton.setHorizontalTextPosition(SwingConstants.CENTER);
-      parseButton.setToolTipText(i18n.getString(
-          "JGDSBROWSER_LOAD" /* NOI18N */));
-      gridBagConstraints        = new GridBagConstraints();
-      gridBagConstraints.gridx  = 8;
-      gridBagConstraints.gridy  = 1;
-      gridBagConstraints.insets = new Insets(0, 10, 0, 10);
-      gridBagConstraints.anchor = GridBagConstraints.WEST;
-      gridBagConstraints.fill   = GridBagConstraints.HORIZONTAL;
-      add(parseButton, gridBagConstraints);
-      exitButton.addActionListener(new ActionListener() {
-          public void actionPerformed(ActionEvent evt) {
-            processControlEvent(evt);
-          }
-        });
+            default:
+                this.controlPanel.setVisible(false);
+        }
     } // end method initComponents
-  } // end class JGDSBrowserControlPanel
-
-  /**
-   * A JGDSParser specialization of the FileFilter interface.  Used to select
-   * only GDS file extensions
-   *
-   * @author   $Author: tvaline $
-   * @version  $Revision: 1.20 $, $Date: 2005/05/18 18:22:38 $
-   */
-  private final class JGDSBrowserFileFilter
-  extends javax.swing.filechooser.FileFilter {
-    /** A flag indicating if directories are selectable */
-    private boolean allowDirs;
-
-    /** A list of selectable file extensions */
-    private String allowed[];
-
-    /** A description of the file filter */
-    private String description;
 
     /**
-     * Creates a new JGDSBrowserFileFilter object.
+     * A method for processing incoming control panel events
      *
-     * @param  desc       The file filter description
-     * @param  allowed    A String array of allowable file extensions
-     * @param  allowDirs  True if directories are allowed to be selected
+     * @param  evt  The event to process
      */
-    private JGDSBrowserFileFilter(String desc, String allowed[],
-        boolean allowDirs) {
-      this.description = desc;
-      this.allowed     = allowed;
-      this.allowDirs   = allowDirs;
-    }
+    private void processControlEvent(AWTEvent evt) {
+        Object src = evt.getSource();
+        final String gdsfile = this.controlPanel.gdsField.getText();
+        final String logfile = this.controlPanel.logField.getText();
+        if (src.equals(this.controlPanel.parseButton)) {
+            if ((this.producer != null) || (this.consumer != null)) {
+                displayDialog(this.i18n.getString(
+                        "JGDSPARSER_RUNNING" /* NOI18N */));
+            }
+            else {
+                this.records = null;
+                this.producer = new Thread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        /* Build the output stream */
+                        JGDSBrowser.this.out = new PipedOutputStream();
+
+                        synchronized (JGDSBrowser.this.consumer) {
+                            JGDSBrowser.this.consumer.notifyAll();
+                        }
+
+                        /* Wait for the consumer to notify us that the input stream has been created */
+                        synchronized (JGDSBrowser.this.producer) {
+                            while (JGDSBrowser.this.in == null) {
+                                try {
+                                    JGDSBrowser.this.producer.wait();
+                                }
+                                catch (InterruptedException ex) {
+                                    ex.printStackTrace();
+
+                                    break;
+                                }
+                            }
+                        }
+
+                        /* It's now safe to parse the design */
+                        JGDSBrowser.this.parser = new GDSParser();
+                        JGDSBrowser.this.parser.setCollecting(true);
+                        JGDSBrowser.this.records = JGDSBrowser.this.parser.parseDesign(new File(gdsfile), JGDSBrowser.this.out);
+                        synchronized (JGDSBrowser.this.updater) {
+                            if (JGDSBrowser.this.records == null) {
+                                JGDSBrowser.this.updater.interrupt();
+                            }
+                            else {
+                                JGDSBrowser.this.updater.notifyAll();
+                            }
+                        }
+
+                        /* Wait for the consumer to notify us that processing is done */
+                        synchronized (JGDSBrowser.this.producer) {
+                            while (JGDSBrowser.this.in != null) {
+                                try {
+                                    JGDSBrowser.this.producer.wait();
+                                }
+                                catch (InterruptedException ex) {
+                                    ex.printStackTrace();
+
+                                    break;
+                                }
+                            }
+                        }
+
+                        /* Close the and delete the output stream */
+                        JGDSBrowser.this.out = null;
+
+                        synchronized (JGDSBrowser.this.consumer) {
+                            JGDSBrowser.this.consumer.notifyAll();
+                        }
+
+                        /* Wait until the consumer exits */
+                        synchronized (JGDSBrowser.this.producer) {
+                            while (JGDSBrowser.this.consumer != null) {
+                                try {
+                                    JGDSBrowser.this.producer.wait();
+                                }
+                                catch (InterruptedException ex) {
+                                    ex.printStackTrace();
+
+                                    break;
+                                }
+                            }
+                        }
+
+                        /* Delete ourself */
+                        JGDSBrowser.this.producer = null;
+                    } // end method run
+                });
+                this.consumer = new Thread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        /* Wait for the output stream */
+                        synchronized (JGDSBrowser.this.consumer) {
+                            while (JGDSBrowser.this.out == null) {
+                                try {
+                                    JGDSBrowser.this.consumer.wait();
+                                }
+                                catch (InterruptedException ex) {
+                                    ex.printStackTrace();
+
+                                    break;
+                                }
+                            }
+                        }
+
+                        /* Create the input stream */
+                        try {
+                            JGDSBrowser.this.in = new PipedInputStream(JGDSBrowser.this.out);
+                        }
+                        catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+
+                        BufferedReader br = new BufferedReader(new InputStreamReader(
+                                JGDSBrowser.this.in));
+                        PrintWriter fw = null;
+
+                        if ((logfile != null) &&
+                                (logfile.trim().length() > 0)) {
+                            try {
+                                fw = new PrintWriter(new File(
+                                        logfile));
+                            }
+                            catch (IOException ex) {
+                                /* can't do anything now */
+                            }
+                        }
+
+                        /* Notify the producer that the input stream is ready */
+                        synchronized (JGDSBrowser.this.producer) {
+                            JGDSBrowser.this.producer.notifyAll();
+                        }
+
+                        /* Read parser data until the end of stream is reached */
+                        String line = null;
+
+                        try {
+                            while ((line = br.readLine()) != null) {
+                                if (fw != null) {
+                                    fw.print(line + "\n" /* NOI18N */);
+                                }
+                            }
+                        }
+                        catch (IOException ex) {
+                            /* can't do anything now */
+                        }
+
+                        /* Close and delete the input streams */
+                        try {
+                            if (fw != null) {
+                                fw.close();
+                            }
+
+                            br.close();
+                            JGDSBrowser.this.in.close();
+                        }
+                        catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+
+                        JGDSBrowser.this.in = null;
+
+                        /* Notify the producer that all the data has been read */
+                        synchronized (JGDSBrowser.this.producer) {
+                            JGDSBrowser.this.producer.notifyAll();
+                        }
+
+                        /* Wait until the output stream is deleted */
+                        synchronized (JGDSBrowser.this.consumer) {
+                            while (JGDSBrowser.this.out != null) {
+                                try {
+                                    JGDSBrowser.this.consumer.wait();
+                                }
+                                catch (InterruptedException ex) {
+                                    ex.printStackTrace();
+
+                                    break;
+                                }
+                            }
+                        }
+
+                        JGDSBrowser.this.consumer = null;
+
+                        /* Delete our self and notify the producer that were finished */
+                        synchronized (JGDSBrowser.this.producer) {
+                            JGDSBrowser.this.producer.notifyAll();
+                        }
+                    } // end method run
+                });
+                this.updater = new Thread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        JGDSBrowser.this.treeTop = new DefaultMutableTreeNode(JGDSBrowser.this.i18n.getString(
+                                "JGDSBROWSER_PARSING" /*NOI18N*/));
+                        JGDSBrowser.this.tree.setModel(new DefaultTreeModel(JGDSBrowser.this.treeTop));
+                        synchronized (JGDSBrowser.this.updater) {
+                            while (JGDSBrowser.this.records == null) {
+                                try {
+                                    JGDSBrowser.this.updater.wait();
+                                }
+                                catch (InterruptedException ex) {
+                                    break;
+                                }
+                            }
+                        }
+                        JGDSBrowser.this.treeTop = new DefaultMutableTreeNode();
+                        if (JGDSBrowser.this.records != null) {
+                            JGDSBrowser.this.tree.buildTree((Database) JGDSBrowser.this.records.get(0));
+                        }
+                        else {
+                            JGDSBrowser.this.tree.setModel(new DefaultTreeModel(
+                                    new DefaultMutableTreeNode()));
+                        }
+                    }
+                });
+                this.producer.start();
+                this.consumer.start();
+                this.updater.start();
+            } // end if
+        }
+        else if (src.equals(this.controlPanel.exitButton)) {
+            if (this.producer != null) {
+                this.producer.interrupt();
+
+                try {
+                    this.producer.join();
+                }
+                catch (InterruptedException ex) {
+                    /* can't do anything now */
+                }
+            }
+        }
+    } // end method processControlEvent
 
     /**
-     * A method to determine if the filter should pass a file based on the
-     * filtering criteria
+     * The control panel class used to set the GDS and log file names as well as
+     * beginning and interrupting parsing
      *
-     * @param   file  The file to test
-     *
-     * @return  True if the extension of the file is one of the allowable
-     *          extensions
+     * @author   $Author: tvaline $
+     * @version  $Revision: 1.20 $, $Date: 2005/05/18 18:22:38 $
      */
-    public boolean accept(File file) {
-      if(file.isDirectory()) {
-        if(allowDirs){return true;}
-        else{return false;}
-      }
+    private final class JGDSBrowserControlPanel extends JPanel {
 
-      String extension = getExtension(file);
+        /**
+         *
+         */
+        private static final long serialVersionUID = -1624540739696826874L;
 
-      if(extension != null) {
-        for(int i = 0;i < allowed.length;i++) {
-          if(extension.equals(allowed[i])){return true;}
+        /** The button used to interrupt parsing */
+        private JButton exitButton;
+
+        /** The file chooser used to select the GDS and log files */
+        private JFileChooser fc;
+
+        /** The file filter used to filter in only GDS files */
+        private JGDSBrowserFileFilter ff;
+
+        /**
+         * The frame used to display the controll panel when in IMPLICIT_CONTROL
+         * mode
+         */
+        private JFrame frame;
+
+        /** The button used to select the GDS file using the file chooser */
+        private JButton gdsButton;
+
+        /** The text field containing the GDS file name */
+        private JTextField gdsField;
+
+        /** The label for the GDS text field */
+        private JLabel gdsLabel;
+
+        /** The button used to select the log file using the file chooser */
+        private JButton logButton;
+
+        /** The text field containing the log file name */
+        private JTextField logField;
+
+        /** The label for the log file text field */
+        private JLabel logLabel;
+
+        /** The button used to begin parsing */
+        private JButton parseButton;
+
+        /**
+         * Creates a new JGDSParserControlPanel object.
+         */
+        private JGDSBrowserControlPanel() {
+            super();
+            initComponents();
         }
 
-        return false;
-      }
+        /**
+         * Returns a string representation of the object
+         *
+         * @return  The physical address of the instance
+         */
+        @Override
+        public String toString() {
+            return super.toString();
+        }
 
-      return false;
-    }
+        /** A method to initialize the sub-components of the control panel */
+        private void initComponents() {
+            GridBagConstraints gridBagConstraints;
+            this.ff = new JGDSBrowserFileFilter(
+                    JGDSBrowser.this.i18n.getString("JGDSPARSER_GDSFILES" /* NOI18N */) +
+                            "(*.gds, *.gds2, *.db, *.sf)" /* NOI18N */,
+                    new String[] {
+                            "gds2" /* NOI18N */,
+                            "db" /* NOI18N */,
+                            "gds" /* NOI18N */,
+                            "sf" /* NOI18N */
+                    }, true);
+            this.gdsLabel = new JLabel();
+            this.gdsField = new JTextField();
+            this.gdsButton = new JButton();
+            this.logLabel = new JLabel();
+            this.logField = new JTextField();
+            this.logButton = new JButton();
+            this.parseButton = new JButton();
+            this.exitButton = new JButton();
+            setLayout(new GridBagLayout());
+            this.gdsLabel.setText(JGDSBrowser.this.i18n.getString("JGDSPARSER_GDS" /* NOI18N */));
+            gridBagConstraints = new GridBagConstraints();
+            gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+            gridBagConstraints.insets = new Insets(10, 10, 0, 0);
+            gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
+            gridBagConstraints.weightx = 1.0;
+            add(this.gdsLabel, gridBagConstraints);
+            this.gdsField.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    processControlEvent(evt);
+                }
+            });
+            this.gdsField.addFocusListener(new FocusAdapter() {
+
+                @Override
+                public void focusLost(FocusEvent evt) {
+                    processControlEvent(evt);
+                }
+            });
+            this.gdsField.setColumns(48);
+            this.gdsField.setToolTipText(JGDSBrowser.this.i18n.getString(
+                    "JGDSPARSER_ENT_GDS" /* NOI18N */));
+            gridBagConstraints = new GridBagConstraints();
+            gridBagConstraints.gridx = 0;
+            gridBagConstraints.gridy = 1;
+            gridBagConstraints.gridwidth = 7;
+            gridBagConstraints.fill = GridBagConstraints.BOTH;
+            gridBagConstraints.insets = new Insets(0, 10, 0, 0);
+            gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
+            gridBagConstraints.weightx = 0.7;
+            add(this.gdsField, gridBagConstraints);
+            this.gdsButton.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    if (JGDSBrowserControlPanel.this.fc == null) {
+                        JGDSBrowserControlPanel.this.fc = new JFileChooser();
+                        JGDSBrowserControlPanel.this.fc.setFileSelectionMode(JGDSBrowserControlPanel.this.fc.FILES_ONLY);
+                    }
+
+                    JGDSBrowserControlPanel.this.fc.addChoosableFileFilter(JGDSBrowserControlPanel.this.ff);
+                    JGDSBrowserControlPanel.this.fc.setAcceptAllFileFilterUsed(true);
+                    JGDSBrowserControlPanel.this.fc.setFileFilter(JGDSBrowserControlPanel.this.ff);
+
+                    int result = JGDSBrowserControlPanel.this.fc.showDialog(null,
+                            JGDSBrowser.this.i18n.getString(
+                                    "JGDSPARSER_SEL_GDS" /* NOI18N */));
+
+                    if (result == JGDSBrowserControlPanel.this.fc.APPROVE_OPTION) {
+                        JGDSBrowserControlPanel.this.gdsField.setText(JGDSBrowserControlPanel.this.fc.getSelectedFile().getAbsolutePath());
+                        processControlEvent(evt);
+                    }
+                }
+            });
+            this.gdsButton.setText("..." /*NOI18N*/);
+            this.gdsButton.setToolTipText(JGDSBrowser.this.i18n.getString(
+                    "JGDSPARSER_BROWSE_GDS" /* NOI18N */));
+            gridBagConstraints = new GridBagConstraints();
+            gridBagConstraints.gridx = 7;
+            gridBagConstraints.gridy = 1;
+            gridBagConstraints.insets = new Insets(0, 0, 0, 10);
+            gridBagConstraints.anchor = GridBagConstraints.WEST;
+            add(this.gdsButton, gridBagConstraints);
+            this.logLabel.setText(JGDSBrowser.this.i18n.getString("JGDSPARSER_LOG" /* NOI18N */));
+            gridBagConstraints = new GridBagConstraints();
+            gridBagConstraints.gridx = 0;
+            gridBagConstraints.gridy = 2;
+            gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+            gridBagConstraints.insets = new Insets(0, 10, 0, 0);
+            gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
+            gridBagConstraints.weightx = 1.0;
+            add(this.logLabel, gridBagConstraints);
+            this.logField.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    processControlEvent(evt);
+                }
+            });
+            this.logField.addFocusListener(new FocusAdapter() {
+
+                @Override
+                public void focusLost(FocusEvent evt) {
+                    processControlEvent(evt);
+                }
+            });
+            this.logField.setColumns(48);
+            this.logField.setToolTipText(JGDSBrowser.this.i18n.getString(
+                    "JGDSPARSER_ENT_LOG" /* NOI18N */));
+            gridBagConstraints = new GridBagConstraints();
+            gridBagConstraints.gridx = 0;
+            gridBagConstraints.gridy = 3;
+            gridBagConstraints.gridwidth = 7;
+            gridBagConstraints.fill = GridBagConstraints.BOTH;
+            gridBagConstraints.insets = new Insets(0, 10, 10, 0);
+            gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
+            gridBagConstraints.weightx = 1.0;
+            add(this.logField, gridBagConstraints);
+            this.logButton.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    if (JGDSBrowserControlPanel.this.fc == null) {
+                        JGDSBrowserControlPanel.this.fc = new JFileChooser();
+                        JGDSBrowserControlPanel.this.fc.setFileSelectionMode(JGDSBrowserControlPanel.this.fc.FILES_ONLY);
+                    }
+
+                    JGDSBrowserControlPanel.this.fc.removeChoosableFileFilter(JGDSBrowserControlPanel.this.ff);
+                    JGDSBrowserControlPanel.this.fc.setAcceptAllFileFilterUsed(true);
+
+                    int result = JGDSBrowserControlPanel.this.fc.showDialog(null,
+                            JGDSBrowser.this.i18n.getString(
+                                    "JGDSPARSER_SEL_LOG" /* NOI18N */));
+
+                    if (result == JGDSBrowserControlPanel.this.fc.APPROVE_OPTION) {
+                        JGDSBrowserControlPanel.this.logField.setText(JGDSBrowserControlPanel.this.fc.getSelectedFile().getAbsolutePath());
+                        processControlEvent(evt);
+                    }
+                }
+            });
+            this.logButton.setText("..." /*NOI18N*/);
+            this.logButton.setToolTipText(JGDSBrowser.this.i18n.getString(
+                    "JGDSPARSER_BROWSE_LOG" /* NOI18N */));
+            gridBagConstraints = new GridBagConstraints();
+            gridBagConstraints.gridx = 7;
+            gridBagConstraints.gridy = 3;
+            gridBagConstraints.insets = new Insets(0, 0, 10, 10);
+            gridBagConstraints.anchor = GridBagConstraints.WEST;
+            add(this.logButton, gridBagConstraints);
+            this.parseButton.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    processControlEvent(evt);
+                }
+            });
+            this.exitButton.setMnemonic(KeyEvent.VK_C);
+            this.exitButton.setText(JGDSBrowser.this.i18n.getString("JGDSBROWSER_STOP" /* NOI18N */));
+            this.exitButton.setHorizontalTextPosition(SwingConstants.CENTER);
+            this.exitButton.setToolTipText(JGDSBrowser.this.i18n.getString(
+                    "JGDSBROWSER_CANCEL" /* NOI18N */));
+            gridBagConstraints = new GridBagConstraints();
+            gridBagConstraints.gridx = 8;
+            gridBagConstraints.gridy = 3;
+            gridBagConstraints.insets = new Insets(0, 10, 10, 10);
+            gridBagConstraints.anchor = GridBagConstraints.WEST;
+            gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+            add(this.exitButton, gridBagConstraints);
+            this.parseButton.setMnemonic(KeyEvent.VK_L);
+            this.parseButton.setText(JGDSBrowser.this.i18n.getString(
+                    "JGDSBROWSER_START" /* NOI18N */));
+            this.parseButton.setHorizontalTextPosition(SwingConstants.CENTER);
+            this.parseButton.setToolTipText(JGDSBrowser.this.i18n.getString(
+                    "JGDSBROWSER_LOAD" /* NOI18N */));
+            gridBagConstraints = new GridBagConstraints();
+            gridBagConstraints.gridx = 8;
+            gridBagConstraints.gridy = 1;
+            gridBagConstraints.insets = new Insets(0, 10, 0, 10);
+            gridBagConstraints.anchor = GridBagConstraints.WEST;
+            gridBagConstraints.fill = GridBagConstraints.HORIZONTAL;
+            add(this.parseButton, gridBagConstraints);
+            this.exitButton.addActionListener(new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent evt) {
+                    processControlEvent(evt);
+                }
+            });
+        } // end method initComponents
+    } // end class JGDSBrowserControlPanel
 
     /**
-     * Returns a description of the file filter
+     * A JGDSParser specialization of the FileFilter interface.  Used to select
+     * only GDS file extensions
      *
-     * @return  A description of the file filter
+     * @author   $Author: tvaline $
+     * @version  $Revision: 1.20 $, $Date: 2005/05/18 18:22:38 $
      */
-    public String getDescription(){return description;}
+    private final class JGDSBrowserFileFilter extends javax.swing.filechooser.FileFilter {
 
-    /**
-     * Returns a string representation of the file filter
-     *
-     * @return  The physical address of the file filter instance
-     */
-    public String toString(){return super.toString();}
+        /** A flag indicating if directories are selectable */
+        private boolean allowDirs;
 
-    /**
-     * A method to determine the extension of a file
-     *
-     * @param   file  The file to test
-     *
-     * @return  The extension of the file
-     */
-    private String getExtension(File file) {
-      String path = file.getPath();
+        /** A list of selectable file extensions */
+        private String allowed[];
 
-      return path.substring(path.lastIndexOf('.') + 1);
-    }
-  } // end class JGDSBrowserFileFilter
+        /** A description of the file filter */
+        private String description;
 
-  /**
-   * A JGDSParser specialization of the MouseListener interface
-   *
-   * @author   $Author: tvaline $
-   * @version  $Revision: 1.20 $, $Date: 2005/05/18 18:22:38 $
-   */
-  private final class JGDSBrowserPaneMouseAdapter
-  extends MouseAdapter {
-    /**
-     * A method that is executed when the mouse is pressed
-     *
-     * @param  evt  An event representing the mouse button press
-     */
-    public void mousePressed(MouseEvent evt){showPopup(evt);}
+        /**
+         * Creates a new JGDSBrowserFileFilter object.
+         *
+         * @param  desc       The file filter description
+         * @param  allowed    A String array of allowable file extensions
+         * @param  allowDirs  True if directories are allowed to be selected
+         */
+        private JGDSBrowserFileFilter(String desc, String allowed[], boolean allowDirs) {
+            this.description = desc;
+            this.allowed = allowed;
+            this.allowDirs = allowDirs;
+        }
 
-    /**
-     * A method that is executed when the mouse is released
-     *
-     * @param  evt  An event representing the mouse button release
-     */
-    public void mouseReleased(MouseEvent evt){showPopup(evt);}
-
-    /**
-     * Returns a string representation of the object
-     *
-     * @return  The physical address of the instance
-     */
-    public String toString(){return super.toString();}
-
-    /**
-     * A method to determine if a popup menu should be displayed
-     *
-     * @param  evt  The mouse event to evaluate
-     */
-    private void showPopup(MouseEvent evt) {
-      if(controlMenu == null) {
-        controlMenu = new JPopupMenu();
-
-        JMenuItem item = controlMenu.add(i18n.getString(
-              "JGDSPARSER_OPEN_MENU" /* NOI18N */));
-        item.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-              if(controlPanelFrame == null) {
-                controlPanelFrame = new JFrame(i18n.getString(
-                      "JGDSBROWSER_OPTIONS" /* NOI18N */));
-                controlPanelFrame.setLocationByPlatform(true);
-                controlPanelFrame.getContentPane().add(
-                  controlPanel);
-                controlPanelFrame.setDefaultCloseOperation(
-                  JFrame.HIDE_ON_CLOSE);
-                controlPanelFrame.setResizable(false);
-              } else{controlPanelFrame.setLocationByPlatform(false);}
-              controlPanelFrame.pack();
-              controlPanelFrame.setVisible(true);
+        /**
+         * A method to determine if the filter should pass a file based on the
+         * filtering criteria
+         *
+         * @param   file  The file to test
+         *
+         * @return  True if the extension of the file is one of the allowable
+         *          extensions
+         */
+        @Override
+        public boolean accept(File file) {
+            if (file.isDirectory()) {
+                if (this.allowDirs) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
             }
-          });
-      }
 
-      if(evt.isPopupTrigger()) {
-        controlMenu.show(evt.getComponent(), evt.getX(), evt.getY());
-      }
-    } // end method showPopup
-  } // end class JGDSBrowserPaneMouseAdapter
+            String extension = getExtension(file);
+
+            if (extension != null) {
+                for (int i = 0; i < this.allowed.length; i++) {
+                    if (extension.equals(this.allowed[i])) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            return false;
+        }
+
+        /**
+         * Returns a description of the file filter
+         *
+         * @return  A description of the file filter
+         */
+        @Override
+        public String getDescription() {
+            return this.description;
+        }
+
+        /**
+         * Returns a string representation of the file filter
+         *
+         * @return  The physical address of the file filter instance
+         */
+        @Override
+        public String toString() {
+            return super.toString();
+        }
+
+        /**
+         * A method to determine the extension of a file
+         *
+         * @param   file  The file to test
+         *
+         * @return  The extension of the file
+         */
+        private String getExtension(File file) {
+            String path = file.getPath();
+
+            return path.substring(path.lastIndexOf('.') + 1);
+        }
+    } // end class JGDSBrowserFileFilter
+
+    /**
+     * A JGDSParser specialization of the MouseListener interface
+     *
+     * @author   $Author: tvaline $
+     * @version  $Revision: 1.20 $, $Date: 2005/05/18 18:22:38 $
+     */
+    private final class JGDSBrowserPaneMouseAdapter extends MouseAdapter {
+
+        /**
+         * A method that is executed when the mouse is pressed
+         *
+         * @param  evt  An event representing the mouse button press
+         */
+        @Override
+        public void mousePressed(MouseEvent evt) {
+            showPopup(evt);
+        }
+
+        /**
+         * A method that is executed when the mouse is released
+         *
+         * @param  evt  An event representing the mouse button release
+         */
+        @Override
+        public void mouseReleased(MouseEvent evt) {
+            showPopup(evt);
+        }
+
+        /**
+         * Returns a string representation of the object
+         *
+         * @return  The physical address of the instance
+         */
+        @Override
+        public String toString() {
+            return super.toString();
+        }
+
+        /**
+         * A method to determine if a popup menu should be displayed
+         *
+         * @param  evt  The mouse event to evaluate
+         */
+        private void showPopup(MouseEvent evt) {
+            if (JGDSBrowser.this.controlMenu == null) {
+                JGDSBrowser.this.controlMenu = new JPopupMenu();
+
+                JMenuItem item = JGDSBrowser.this.controlMenu.add(JGDSBrowser.this.i18n.getString(
+                        "JGDSPARSER_OPEN_MENU" /* NOI18N */));
+                item.addActionListener(new ActionListener() {
+
+                    @Override
+                    public void actionPerformed(ActionEvent evt) {
+                        if (JGDSBrowser.this.controlPanelFrame == null) {
+                            JGDSBrowser.this.controlPanelFrame = new JFrame(JGDSBrowser.this.i18n.getString(
+                                    "JGDSBROWSER_OPTIONS" /* NOI18N */));
+                            JGDSBrowser.this.controlPanelFrame.setLocationByPlatform(true);
+                            JGDSBrowser.this.controlPanelFrame.getContentPane().add(
+                                    JGDSBrowser.this.controlPanel);
+                            JGDSBrowser.this.controlPanelFrame.setDefaultCloseOperation(
+                                    JFrame.HIDE_ON_CLOSE);
+                            JGDSBrowser.this.controlPanelFrame.setResizable(false);
+                        }
+                        else {
+                            JGDSBrowser.this.controlPanelFrame.setLocationByPlatform(false);
+                        }
+                        JGDSBrowser.this.controlPanelFrame.pack();
+                        JGDSBrowser.this.controlPanelFrame.setVisible(true);
+                    }
+                });
+            }
+
+            if (evt.isPopupTrigger()) {
+                JGDSBrowser.this.controlMenu.show(evt.getComponent(), evt.getX(), evt.getY());
+            }
+        } // end method showPopup
+    } // end class JGDSBrowserPaneMouseAdapter
 } // end class JGDSBrowser
-
 
 /* This material is distributed under the GNU General Public License.
  * For more information please go to http://www.gnu.org/copyleft/gpl.html */

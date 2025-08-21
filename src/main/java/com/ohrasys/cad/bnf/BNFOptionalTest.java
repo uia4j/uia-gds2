@@ -1,4 +1,5 @@
-/* Copyright (C) 2004 Thomas N. Valine
+/*
+ * Copyright (C) 2004 Thomas N. Valine
  * tvaline@users.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -8,16 +9,16 @@
  *
  * This program is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License along
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA. */
+ * 02111-1307, USA.
+ */
 
 package com.ohrasys.cad.bnf;
-import java.util.*;
 
 /**
  * A test in which all sub-tests must occur zero or one time
@@ -25,85 +26,95 @@ import java.util.*;
  * @author   $Author: tvaline $
  * @version  $Revision: 1.27 $, $Date: 2005/03/31 22:13:17 $
  */
-public class BNFOptionalTest
-extends BNFAbstractTest {
-  /**
-   * Creates a new BNFOptionalTest object.
-   *
-   * @param   tests  The sub-tests that comprise the test
-   *
-   * @throws  BNFTestException  If the sub-test list is null, zero length
-   *                            or one of the sub-tests is null
-   */
-  public BNFOptionalTest(BNFTestImplementor tests[])
-    throws BNFTestException{super(tests);}
+public class BNFOptionalTest extends BNFAbstractTest {
 
-  /**
-   * A method to evaluate this test using the supplied testable object
-   *
-   * @param   obj  The BNFTestableObject from which to extract the token
-   *               used to evaluate this test
-   *
-   * @return  A BNFTestResult object representing the result of this test.
-   *          If more tokens are required to resolve the test, then
-   *          UNFINISHED is returned and the results committable tokens
-   *          list and replayable tokens list are empty. If the test
-   *          completed successfully then FINISHED is returned and the
-   *          committable tokens list contains a list of all tokens
-   *          successfully processed by this test and the replayable tokens
-   *          list contains a list of tokens required to be replayed.
-   *          Otherwise FAILED is returned and all tokens processed by this
-   *          test are returned in the replayable list.
-   */
-  public BNFTestResult test(BNFTestableObject obj) {
-    playable.add(0, obj);
-    while(playable.size() > 0) {
-      BNFTestableObject crntToken   = playable.remove(0);
-      BNFTestResult     childResult = tests[nextTest].test(crntToken);
-      if(childResult.isUnfinished()){result.setResult(result.UNFINISHED);}
-      else if(childResult.isFinished()) {
-        committed.addAll(childResult.getCommittableTokens());
-        playable.addAll(0, childResult.getReplayableTokens());
-        if(collecting){collectedData.add(tests[nextTest].collect());}
-        if(isLastTest()) {
-          result.addCommittableTokens(committed);
-          result.addReplayableTokens(playable);
-          result.setResult(result.FINISHED);
-          reset();
-          playable.clear();
-          committed.clear();
-        } else {
-          result.setResult(result.UNFINISHED);
-          nextTest++;
+    /**
+     * Creates a new BNFOptionalTest object.
+     *
+     * @param   tests  The sub-tests that comprise the test
+     *
+     * @throws  BNFTestException  If the sub-test list is null, zero length
+     *                            or one of the sub-tests is null
+     */
+    public BNFOptionalTest(BNFTestImplementor tests[]) throws BNFTestException {
+        super(tests);
+    }
 
-          continue;
-        }
-      } else {
-        committed.addAll(childResult.getCommittableTokens());
-        playable.addAll(0, childResult.getReplayableTokens());
-        result.addReplayableTokens(committed);
-        result.addReplayableTokens(playable);
-        result.setResult(result.FINISHED);
-        collectedData.clear();
-        reset();
-        playable.clear();
-        committed.clear();
-      }
-    } // end while
-    BNFTestResult testResult = result;
-    result = new BNFTestResult();
+    /**
+     * A method to evaluate this test using the supplied testable object
+     *
+     * @param   obj  The BNFTestableObject from which to extract the token
+     *               used to evaluate this test
+     *
+     * @return  A BNFTestResult object representing the result of this test.
+     *          If more tokens are required to resolve the test, then
+     *          UNFINISHED is returned and the results committable tokens
+     *          list and replayable tokens list are empty. If the test
+     *          completed successfully then FINISHED is returned and the
+     *          committable tokens list contains a list of all tokens
+     *          successfully processed by this test and the replayable tokens
+     *          list contains a list of tokens required to be replayed.
+     *          Otherwise FAILED is returned and all tokens processed by this
+     *          test are returned in the replayable list.
+     */
+    @Override
+    public BNFTestResult test(BNFTestableObject obj) {
+        this.playable.add(0, obj);
+        while (this.playable.size() > 0) {
+            BNFTestableObject crntToken = this.playable.remove(0);
+            BNFTestResult childResult = this.tests[this.nextTest].test(crntToken);
+            if (childResult.isUnfinished()) {
+                this.result.setResult(BNFTestResult.UNFINISHED);
+            }
+            else if (childResult.isFinished()) {
+                this.committed.addAll(childResult.getCommittableTokens());
+                this.playable.addAll(0, childResult.getReplayableTokens());
+                if (this.collecting) {
+                    this.collectedData.add(this.tests[this.nextTest].collect());
+                }
+                if (isLastTest()) {
+                    this.result.addCommittableTokens(this.committed);
+                    this.result.addReplayableTokens(this.playable);
+                    this.result.setResult(BNFTestResult.FINISHED);
+                    reset();
+                    this.playable.clear();
+                    this.committed.clear();
+                }
+                else {
+                    this.result.setResult(BNFTestResult.UNFINISHED);
+                    this.nextTest++;
 
-    return testResult;
-  } // end method test
+                    continue;
+                }
+            }
+            else {
+                this.committed.addAll(childResult.getCommittableTokens());
+                this.playable.addAll(0, childResult.getReplayableTokens());
+                this.result.addReplayableTokens(this.committed);
+                this.result.addReplayableTokens(this.playable);
+                this.result.setResult(BNFTestResult.FINISHED);
+                this.collectedData.clear();
+                reset();
+                this.playable.clear();
+                this.committed.clear();
+            }
+        } // end while
+        BNFTestResult testResult = this.result;
+        this.result = new BNFTestResult();
 
-  /**
-   * Returns a text representation of this test
-   *
-   * @return  A text representation of this test
-   */
-  public String toString(){return super.toString();}
+        return testResult;
+    } // end method test
+
+    /**
+     * Returns a text representation of this test
+     *
+     * @return  A text representation of this test
+     */
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 } // end class BNFOptionalTest
-
 
 /* This material is distributed under the GNU General Public License.
  * For more information please go to http://www.gnu.org/copyleft/gpl.html

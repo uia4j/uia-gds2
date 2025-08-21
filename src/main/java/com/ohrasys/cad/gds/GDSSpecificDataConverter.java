@@ -39,9 +39,6 @@ import java.util.List;
  */
 public class GDSSpecificDataConverter {
 
-    /** The internationalized string factory */
-    private static GDSI18NFactory i18n;
-
     /**
      * Returns a flattened representation of a hierarchical list.
      *
@@ -50,19 +47,20 @@ public class GDSSpecificDataConverter {
      *
      * @return  The flattened list
      */
-    public static List flattenList(List flat, List hier) {
+    @SuppressWarnings("unchecked")
+    public static List<Object> flattenList(List<Object> flat, List<Object> hier) {
         if ((flat == null) || (hier == null)) {
-            return new ArrayList();
+            return new ArrayList<Object>();
         }
         for (int i = 0; i < hier.size(); i++) {
             if (!(hier.get(i) instanceof java.util.List)) {
                 flat.add(hier.get(i));
             }
-            else if (((java.util.List) hier.get(i)).size() == 0) {
+            else if (((List<Object>) hier.get(i)).size() == 0) {
                 continue;
             }
             else {
-                flat = flattenList(flat, (java.util.List) hier.get(i));
+                flat = flattenList(flat, (List<Object>) hier.get(i));
             }
         }
 
@@ -216,8 +214,8 @@ public class GDSSpecificDataConverter {
      */
     public static double toDouble(byte bytes[]) throws NumberFormatException {
         if (bytes.length < 8) {
-            throw new NumberFormatException(i18n.getString(
-                    i18n.i18n_DATACONVERT_THROW1));
+            throw new NumberFormatException(GDSI18NFactory.getString(
+                    GDSI18NFactory.i18n_DATACONVERT_THROW1));
         }
         else {
             int sign;
@@ -256,8 +254,8 @@ public class GDSSpecificDataConverter {
      */
     public static float toFloat(byte bytes[]) throws NumberFormatException {
         if (bytes.length < 4) {
-            throw new NumberFormatException(i18n.getString(
-                    i18n.i18n_DATACONVERT_THROW2));
+            throw new NumberFormatException(GDSI18NFactory.getString(
+                    GDSI18NFactory.i18n_DATACONVERT_THROW2));
         }
         else {
             int sign;
@@ -331,8 +329,8 @@ public class GDSSpecificDataConverter {
         }
 
         if (exponent == 0) {
-            throw new IllegalArgumentException(i18n.getString(
-                    i18n.i18n_DATACONVERT_THROW3));
+            throw new IllegalArgumentException(GDSI18NFactory.getString(
+                    GDSI18NFactory.i18n_DATACONVERT_THROW3));
         }
 
         for (; (reg.doubleValue() >= 1) && (exponent < 128); exponent++) {
@@ -340,8 +338,8 @@ public class GDSSpecificDataConverter {
         }
 
         if (exponent > 127) {
-            throw new IllegalArgumentException(i18n.getString(
-                    i18n.i18n_DATACONVERT_THROW4));
+            throw new IllegalArgumentException(GDSI18NFactory.getString(
+                    GDSI18NFactory.i18n_DATACONVERT_THROW4));
         }
 
         if (negsign) {
@@ -357,7 +355,7 @@ public class GDSSpecificDataConverter {
         mantissa = f_mantissa.longValue();
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        baos = GDSByteConverter.fromByte((byte) exponent, baos);
+        GDSByteConverter.fromByte((byte) exponent, baos);
 
         for (int i = 6; i >= 0; i--) {
             baos = GDSByteConverter.fromByte((byte) ((mantissa >> (i * 8)) &
@@ -411,8 +409,8 @@ public class GDSSpecificDataConverter {
         }
 
         if (exponent == 0) {
-            throw new IllegalArgumentException(i18n.getString(
-                    i18n.i18n_DATACONVERT_THROW3));
+            throw new IllegalArgumentException(GDSI18NFactory.getString(
+                    GDSI18NFactory.i18n_DATACONVERT_THROW3));
         }
 
         for (; (reg.doubleValue() >= 1) && (exponent < 128); exponent++) {
@@ -420,8 +418,8 @@ public class GDSSpecificDataConverter {
         }
 
         if (exponent > 127) {
-            throw new IllegalArgumentException(i18n.getString(
-                    i18n.i18n_DATACONVERT_THROW4));
+            throw new IllegalArgumentException(GDSI18NFactory.getString(
+                    GDSI18NFactory.i18n_DATACONVERT_THROW4));
         }
 
         if (negsign) {
@@ -437,7 +435,7 @@ public class GDSSpecificDataConverter {
         mantissa = f_mantissa.intValue();
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        baos = GDSByteConverter.fromByte((byte) exponent, baos);
+        GDSByteConverter.fromByte((byte) exponent, baos);
 
         for (int i = 2; i >= 0; i--) {
             baos = GDSByteConverter.fromByte((byte) ((mantissa >> (i * 8)) &
@@ -473,7 +471,7 @@ public class GDSSpecificDataConverter {
             osw.close();
 
             if ((baos.size() % 2) == 1) {
-                baos = GDSByteConverter.fromByte((byte) 0x00, baos);
+                GDSByteConverter.fromByte((byte) 0x00, baos);
             }
 
             result = baos.toByteArray();
@@ -498,8 +496,8 @@ public class GDSSpecificDataConverter {
      */
     public static byte[] writeJavaString(String data, int len) {
         if ((len % 2) == 1) {
-            throw new IllegalArgumentException(i18n.getString(
-                    i18n.i18n_DATACONVERT_THROW5));
+            throw new IllegalArgumentException(GDSI18NFactory.getString(
+                    GDSI18NFactory.i18n_DATACONVERT_THROW5));
         }
 
         byte result[] = null;

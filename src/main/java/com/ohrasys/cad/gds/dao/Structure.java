@@ -1,4 +1,5 @@
-/* Copyright (C) 2004 Thomas N. Valine
+/*
+ * Copyright (C) 2004 Thomas N. Valine
  * tvaline@users.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or
@@ -8,16 +9,19 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA. */
+ * 02111-1307, USA.
+ */
 
 package com.ohrasys.cad.gds.dao;
-import java.util.*;
+
+import java.util.Date;
+import java.util.ResourceBundle;
 
 /**
  * A structure data access object
@@ -25,186 +29,210 @@ import java.util.*;
  * @author   $Author: tvaline $
  * @version  $Revision: 1.6 $, $Date: 2005/05/18 07:11:09 $
  */
-public class Structure
-implements InfoProvider {
-  /** The resource bundle */
-  private static final String bundle =
-    "com/ohrasys/cad/gds/dao/JGDSDAOProperties" /* NOI18N */;
+public class Structure implements InfoProvider {
 
-  /** Holds value of property accessed. */
-  private Date accessed;
+    /** The resource bundle */
+    private static final String bundle = "com/ohrasys/cad/gds/dao/JGDSDAOProperties" /* NOI18N */;
 
-  /** Holds value of property elements. */
-  private Element elements[];
+    /** Holds value of property accessed. */
+    private Date accessed;
 
-  /** The resource bundle */
-  private ResourceBundle i18n;
+    /** Holds value of property elements. */
+    private Element elements[];
 
-  /** Holds value of property modified. */
-  private Date modified;
+    /** The resource bundle */
+    private ResourceBundle i18n;
 
-  /** Holds value of property name. */
-  private String name;
+    /** Holds value of property modified. */
+    private Date modified;
 
-  /** Holds value of property structureClass. */
-  private int structureClass;
+    /** Holds value of property name. */
+    private String name;
 
-  /**
-   * Creates a new Structure object.
-   */
-  public Structure(){this(new String());}
+    /** Holds value of property structureClass. */
+    private int structureClass;
 
-  /**
-   * Creates a new Structure object.
-   *
-   * @param  name  The name of the structure
-   */
-  public Structure(String name){this(name, new Element[0]);}
-
-  /**
-   * Creates a new Structure object.
-   *
-   * @param  name      The name of the structure
-   * @param  elements  The elements that define the structure
-   */
-  public Structure(String name, Element elements[]) {
-    this(name, new Date(System.currentTimeMillis()),
-      new Date(System.currentTimeMillis()), elements);
-  }
-
-  /**
-   * Creates a new Structure object.
-   *
-   * @param  name      The name of the strucuture
-   * @param  accessed  The date the structure was last accessed
-   * @param  modified  The date the structure was last modified
-   * @param  elements  The elements that define the structure
-   */
-  public Structure(String name, Date accessed, Date modified,
-      Element elements[]){this(name, accessed, modified, 0, elements);}
-
-  /**
-   * Creates a new Structure object.
-   *
-   * @param  name            The name of the structure
-   * @param  accessed        The date the structure was last accessed
-   * @param  modified        The data the structure was last modified
-   * @param  structureClass  The object group the structure belongs to
-   * @param  elements        The elements that define the structure
-   */
-  public Structure(String name, Date accessed, Date modified,
-      int structureClass, Element elements[]) {
-    setName(name);
-    setAccessed(accessed);
-    setModified(modified);
-    setStructureClass(structureClass);
-    setElements(elements);
-    i18n = ResourceBundle.getBundle(bundle);
-  }
-
-  /**
-   * Getter for property accessed.
-   *
-   * @return  Value of property accessed.
-   */
-  public Date getAccessed(){return this.accessed;}
-
-  /**
-   * Setter for the elements property
-   *
-   * @return  Value of the property elements
-   */
-  public Element[] getElements(){return this.elements;}
-
-  /**
-   * Returns a textual representation of the structure
-   *
-   * @return  A textual representation of the structure
-   */
-  public String getInfo() {
-    String result = new String();
-    result += String.format(i18n.getString("I18N_STRUCT_NAME" /*NOI18N*/),
-        name);
-    result += String.format(i18n.getString("I18N_STRUCT_MOD" /*NOI18N*/),
-        modified.toString());
-    result += String.format(i18n.getString("I18N_STRUCT_ACCESSED" /*NOI18N*/),
-        accessed.toString());
-    if(elements != null) {
-      result += String.format(i18n.getString("I18N_STRUCT_COUNT" /*NOI18N*/),
-          elements.length);
+    /**
+     * Creates a new Structure object.
+     */
+    public Structure() {
+        this(new String());
     }
-    result += String.format(i18n.getString("I18N_STRUCT_CLASS" /*NOI18N*/),
-        structureClass);
 
-    return result;
-  }
+    /**
+     * Creates a new Structure object.
+     *
+     * @param  name  The name of the structure
+     */
+    public Structure(String name) {
+        this(name, new Element[0]);
+    }
 
-  /**
-   * Getter for property modified.
-   *
-   * @return  Value of property modified.
-   */
-  public Date getModified(){return this.modified;}
+    /**
+     * Creates a new Structure object.
+     *
+     * @param  name      The name of the structure
+     * @param  elements  The elements that define the structure
+     */
+    public Structure(String name, Element elements[]) {
+        this(name, new Date(System.currentTimeMillis()),
+                new Date(System.currentTimeMillis()), elements);
+    }
 
-  /**
-   * Getter for property name.
-   *
-   * @return  Value of property name.
-   */
-  public String getName(){return this.name;}
+    /**
+     * Creates a new Structure object.
+     *
+     * @param  name      The name of the strucuture
+     * @param  accessed  The date the structure was last accessed
+     * @param  modified  The date the structure was last modified
+     * @param  elements  The elements that define the structure
+     */
+    public Structure(String name, Date accessed, Date modified, Element elements[]) {
+        this(name, accessed, modified, 0, elements);
+    }
 
-  /**
-   * Getter for property structureClass.
-   *
-   * @return  Value of property structureClass.
-   */
-  public int getStructureClass(){return this.structureClass;}
+    /**
+     * Creates a new Structure object.
+     *
+     * @param  name            The name of the structure
+     * @param  accessed        The date the structure was last accessed
+     * @param  modified        The data the structure was last modified
+     * @param  structureClass  The object group the structure belongs to
+     * @param  elements        The elements that define the structure
+     */
+    public Structure(String name, Date accessed, Date modified, int structureClass, Element elements[]) {
+        setName(name);
+        setAccessed(accessed);
+        setModified(modified);
+        setStructureClass(structureClass);
+        setElements(elements);
+        this.i18n = ResourceBundle.getBundle(bundle);
+    }
 
-  /**
-   * Setter for property accessed.
-   *
-   * @param  accessed  New value of property accessed.
-   */
-  public void setAccessed(Date accessed){this.accessed = accessed;}
+    /**
+     * Getter for property accessed.
+     *
+     * @return  Value of property accessed.
+     */
+    public Date getAccessed() {
+        return this.accessed;
+    }
 
-  /**
-   * Setter for the elements property
-   *
-   * @param  elements  The value of the elements property
-   */
-  public void setElements(Element elements[]){this.elements = elements;}
+    /**
+     * Setter for the elements property
+     *
+     * @return  Value of the property elements
+     */
+    public Element[] getElements() {
+        return this.elements;
+    }
 
-  /**
-   * Setter for property modified.
-   *
-   * @param  modified  New value of property modified.
-   */
-  public void setModified(Date modified){this.modified = modified;}
+    /**
+     * Returns a textual representation of the structure
+     *
+     * @return  A textual representation of the structure
+     */
+    @Override
+    public String getInfo() {
+        String result = new String();
+        result += String.format(this.i18n.getString("I18N_STRUCT_NAME" /*NOI18N*/),
+                this.name);
+        result += String.format(this.i18n.getString("I18N_STRUCT_MOD" /*NOI18N*/),
+                this.modified.toString());
+        result += String.format(this.i18n.getString("I18N_STRUCT_ACCESSED" /*NOI18N*/),
+                this.accessed.toString());
+        if (this.elements != null) {
+            result += String.format(this.i18n.getString("I18N_STRUCT_COUNT" /*NOI18N*/),
+                    this.elements.length);
+        }
+        result += String.format(this.i18n.getString("I18N_STRUCT_CLASS" /*NOI18N*/),
+                this.structureClass);
 
-  /**
-   * Setter for property name.
-   *
-   * @param  name  New value of property name.
-   */
-  public void setName(String name){this.name = name;}
+        return result;
+    }
 
-  /**
-   * Setter for property structureClass.
-   *
-   * @param  structureClass  New value of property structureClass.
-   */
-  public void setStructureClass(int structureClass) {
-    this.structureClass = structureClass;
-  }
+    /**
+     * Getter for property modified.
+     *
+     * @return  Value of property modified.
+     */
+    public Date getModified() {
+        return this.modified;
+    }
 
-  /**
-   * Returns a string representation of the structure
-   *
-   * @return  A string representation of the structure
-   */
-  public String toString(){return getName();}
+    /**
+     * Getter for property name.
+     *
+     * @return  Value of property name.
+     */
+    public String getName() {
+        return this.name;
+    }
+
+    /**
+     * Getter for property structureClass.
+     *
+     * @return  Value of property structureClass.
+     */
+    public int getStructureClass() {
+        return this.structureClass;
+    }
+
+    /**
+     * Setter for property accessed.
+     *
+     * @param  accessed  New value of property accessed.
+     */
+    public void setAccessed(Date accessed) {
+        this.accessed = accessed;
+    }
+
+    /**
+     * Setter for the elements property
+     *
+     * @param  elements  The value of the elements property
+     */
+    public void setElements(Element elements[]) {
+        this.elements = elements;
+    }
+
+    /**
+     * Setter for property modified.
+     *
+     * @param  modified  New value of property modified.
+     */
+    public void setModified(Date modified) {
+        this.modified = modified;
+    }
+
+    /**
+     * Setter for property name.
+     *
+     * @param  name  New value of property name.
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Setter for property structureClass.
+     *
+     * @param  structureClass  New value of property structureClass.
+     */
+    public void setStructureClass(int structureClass) {
+        this.structureClass = structureClass;
+    }
+
+    /**
+     * Returns a string representation of the structure
+     *
+     * @return  A string representation of the structure
+     */
+    @Override
+    public String toString() {
+        return getName();
+    }
 } // end class Structure
-
 
 /* This material is distributed under the GNU General Public License.
  * For more information please go to http://www.gnu.org/copyleft/gpl.html */

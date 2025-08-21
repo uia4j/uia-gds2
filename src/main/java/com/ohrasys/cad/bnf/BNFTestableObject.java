@@ -1,4 +1,5 @@
-/* Copyright (C) 2004 Thomas N. Valine
+/*
+ * Copyright (C) 2004 Thomas N. Valine
  * tvaline@users.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -8,13 +9,14 @@
  *
  * This program is distributed in the hope that it will be useful, but
  * WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
  * General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License along
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA. */
+ * 02111-1307, USA.
+ */
 
 package com.ohrasys.cad.bnf;
 
@@ -26,65 +28,82 @@ package com.ohrasys.cad.bnf;
  * @version  $Revision: 1.10 $, $Date: 2005/03/31 22:13:17 $
  */
 public abstract class BNFTestableObject {
-  /** The underlying data object */
-  private Object data;
 
-  /**
-   * Creates a new BNFTestableObject object.
-   *
-   * @param  data  The object to wrap
-   */
-  public BNFTestableObject(Object data){this.data = data;}
+    /** The underlying data object */
+    private Object data;
 
-  /**
-   * An abstract method to retrieve a token from the underlying data object
-   *
-   * @return  An integer token used to represent the object
-   */
-  public abstract int getToken();
+    /**
+     * Creates a new BNFTestableObject object.
+     *
+     * @param  data  The object to wrap
+     */
+    public BNFTestableObject(Object data) {
+        this.data = data;
+    }
 
-  /**
-   * A method to determine if this object is equivalent to another
-   *
-   * @param   obj  The object to compare against
-   *
-   * @return  true if both objects are instances of BNFTestableObjects and
-   *          the underlying data objects are equal
-   */
-  public boolean equals(Object obj) {
-    if(!(obj instanceof BNFTestableObject)){return false;}
-    else{return data.equals(((BNFTestableObject)obj).getData());}
-  }
+    /**
+     * An abstract method to retrieve a token from the underlying data object
+     *
+     * @return  An integer token used to represent the object 
+     */
+    public abstract int getToken();
 
-  /**
-   * Returns the underlying data object
-   *
-   * @return  The underlying data object
-   */
-  public Object getData(){return this.data;}
+    /**
+     * A method to determine if this object is equivalent to another
+     *
+     * @param   obj  The object to compare against
+     *
+     * @return  true if both objects are instances of BNFTestableObjects and
+     *          the underlying data objects are equal
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof BNFTestableObject)) {
+            return false;
+        }
+        else {
+            return this.data.equals(((BNFTestableObject) obj).getData());
+        }
+    }
 
-  /**
-   * Returns a unique hashCode for the object
-   *
-   * @return  The hash code of the underlying data object
-   */
-  public int hashCode(){return data.hashCode();}
+    /**
+     * Returns the underlying data object
+     *
+     * @return  The underlying data object
+     */
+    public Object getData() {
+        return this.data;
+    }
 
-  /**
-   * Sets the underlying data
-   *
-   * @param  obj  The new underlying data object
-   */
-  public void setData(Object obj){this.data = obj;}
+    /**
+     * Returns a unique hashCode for the object
+     *
+     * @return  The hash code of the underlying data object
+     */
+    @Override
+    public int hashCode() {
+        return this.data.hashCode();
+    }
 
-  /**
-   * Returns a text representation of this object
-   *
-   * @return  A text representation of the underlying data object
-   */
-  public String toString(){return data.toString();}
+    /**
+     * Sets the underlying data
+     *
+     * @param  obj  The new underlying data object
+     */
+    public void setData(Object obj) {
+        this.data = obj;
+    }
+
+    /**
+     * Returns a text representation of this object
+     *
+     * @return  A text representation of the underlying data object
+     */
+    @Override
+    public String toString() {
+        return this.data.toString();
+    }
 } // end class BNFTestableObject
-
 
 /* This material is distributed under the GNU General Public License.
  * For more information please go to http://www.gnu.org/copyleft/gpl.html

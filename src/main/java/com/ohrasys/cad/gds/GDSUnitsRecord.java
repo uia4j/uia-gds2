@@ -153,8 +153,8 @@ public class GDSUnitsRecord extends GDSRecord {
      */
     private byte[] updateData() {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        baos = GDSSpecificDataConverter.fromJavaDouble(this.uuperdbu, baos);
-        baos = GDSSpecificDataConverter.fromJavaDouble(this.metersperdbu, baos);
+        GDSSpecificDataConverter.fromJavaDouble(this.uuperdbu, baos);
+        GDSSpecificDataConverter.fromJavaDouble(this.metersperdbu, baos);
 
         return baos.toByteArray();
     }

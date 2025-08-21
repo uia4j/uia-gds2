@@ -1,4 +1,5 @@
-/* Copyright (C) 2004 Thomas N. Valine
+/*
+ * Copyright (C) 2004 Thomas N. Valine
  * tvaline@users.sourceforge.net
  *
  * This program is free software; you can redistribute it and/or
@@ -8,21 +9,29 @@
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
- * 02111-1307, USA. */
+ * 02111-1307, USA.
+ */
 
 package com.ohrasys.cad.gds.validator;
 
-import com.ohrasys.cad.bnf.*;
-import com.ohrasys.cad.gds.*;
-import com.ohrasys.cad.gds.dao.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.*;
+import com.ohrasys.cad.bnf.BNFNoFallthruTest;
+import com.ohrasys.cad.bnf.BNFOneOrMoreOptionalTest;
+import com.ohrasys.cad.bnf.BNFRequiredTest;
+import com.ohrasys.cad.bnf.BNFTestException;
+import com.ohrasys.cad.bnf.BNFTestImplementor;
+import com.ohrasys.cad.gds.GDSRecord;
+import com.ohrasys.cad.gds.GDSSpecificDataConverter;
+import com.ohrasys.cad.gds.dao.Element;
+import com.ohrasys.cad.gds.dao.Property;
 
 /**
  * A Bachus Naur test for a GDSII &lt;element&gt;
@@ -31,61 +40,63 @@ import java.util.*;
  * @version  $Revision: 1.13 $
  * @since    1.5
  */
-public class ElementValidator
-extends BNFRequiredTest {
-  /**
-   * Creates a new ElementValidator object.
-   *
-   * @throws  BNFTestException  If an error in object creation occurs
-   */
-  public ElementValidator()
-    throws BNFTestException {
-    super(
+public class ElementValidator extends BNFRequiredTest {
 
-    new BNFTestImplementor[]{
-        new ElementBodyValidator(),
-        new BNFOneOrMoreOptionalTest(
-          new BNFTestImplementor[]{new PropertyValidator()}),
-        new BNFNoFallthruTest(GDSRecord.ENDEL)
-      });
-  }
+    /**
+     * Creates a new ElementValidator object.
+     *
+     * @throws  BNFTestException  If an error in object creation occurs
+     */
+    public ElementValidator() throws BNFTestException {
+        super(
 
-  /**
-   * A method to retrieve data collected during the evaluation of this test
-   *
-   * @return  A list containing the data collected by this test during
-   *          evaluation
-   */
-  public Object collect() {
-    List<Element> result   = new ArrayList<Element>();
-    List<Object>  retValue = (List<Object>)super.collect();
-    retValue = GDSSpecificDataConverter.flattenList(new ArrayList<Object>(),
-        retValue);
-    Element        element    = null;
-    List<Property> properties = new ArrayList<Property>();
-    for(int i = 0;i < retValue.size();i++) {
-      if(retValue.get(i) instanceof Element) {
-        element = (Element)retValue.get(i);
-      } else if(retValue.get(i) instanceof Property) {
-        properties.add((Property)retValue.get(i));
-      }
+                new BNFTestImplementor[] {
+                        new ElementBodyValidator(),
+                        new BNFOneOrMoreOptionalTest(
+                                new BNFTestImplementor[] { new PropertyValidator() }),
+                        new BNFNoFallthruTest(GDSRecord.ENDEL)
+                });
     }
-    if(element != null) {
-      element.setProperties(properties.toArray(new Property[0]));
+
+    /**
+     * A method to retrieve data collected during the evaluation of this test
+     *
+     * @return  A list containing the data collected by this test during
+     *          evaluation
+     */
+    @Override
+    public Object collect() {
+        List<Element> result = new ArrayList<Element>();
+        List<Object> retValue = (List<Object>) super.collect();
+        retValue = GDSSpecificDataConverter.flattenList(new ArrayList<Object>(), retValue);
+        Element element = null;
+        List<Property> properties = new ArrayList<Property>();
+        for (int i = 0; i < retValue.size(); i++) {
+            if (retValue.get(i) instanceof Element) {
+                element = (Element) retValue.get(i);
+            }
+            else if (retValue.get(i) instanceof Property) {
+                properties.add((Property) retValue.get(i));
+            }
+        }
+        if (element != null) {
+            element.setProperties(properties.toArray(new Property[0]));
+        }
+        result.add(element);
+
+        return result;
     }
-    result.add(element);
 
-    return result;
-  }
-
-  /**
-   * Returns a string representation of this validator
-   *
-   * @return  The physical address of this object
-   */
-  public String toString(){return super.toString();}
+    /**
+     * Returns a string representation of this validator
+     *
+     * @return  The physical address of this object
+     */
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 } // end class ElementValidator
-
 
 /* This material is distributed under the GNU General Public License.
  * For more information please go to http://www.gnu.org/copyleft/gpl.html */

@@ -208,18 +208,18 @@ public class GDSBgnlibRecord extends GDSRecord {
      */
     private byte[] updateData() {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        baos = GDSByteConverter.fromShort((short) (this.lm_year - 1900), baos);
-        baos = GDSByteConverter.fromShort(this.lm_month, baos);
-        baos = GDSByteConverter.fromShort(this.lm_day, baos);
-        baos = GDSByteConverter.fromShort(this.lm_hour, baos);
-        baos = GDSByteConverter.fromShort(this.lm_minute, baos);
-        baos = GDSByteConverter.fromShort(this.lm_second, baos);
-        baos = GDSByteConverter.fromShort((short) (this.la_year - 1900), baos);
-        baos = GDSByteConverter.fromShort(this.la_month, baos);
-        baos = GDSByteConverter.fromShort(this.la_day, baos);
-        baos = GDSByteConverter.fromShort(this.la_hour, baos);
-        baos = GDSByteConverter.fromShort(this.la_minute, baos);
-        baos = GDSByteConverter.fromShort(this.la_second, baos);
+        GDSByteConverter.fromShort((short) (this.lm_year - 1900), baos);
+        GDSByteConverter.fromShort(this.lm_month, baos);
+        GDSByteConverter.fromShort(this.lm_day, baos);
+        GDSByteConverter.fromShort(this.lm_hour, baos);
+        GDSByteConverter.fromShort(this.lm_minute, baos);
+        GDSByteConverter.fromShort(this.lm_second, baos);
+        GDSByteConverter.fromShort((short) (this.la_year - 1900), baos);
+        GDSByteConverter.fromShort(this.la_month, baos);
+        GDSByteConverter.fromShort(this.la_day, baos);
+        GDSByteConverter.fromShort(this.la_hour, baos);
+        GDSByteConverter.fromShort(this.la_minute, baos);
+        GDSByteConverter.fromShort(this.la_second, baos);
 
         return baos.toByteArray();
     }
