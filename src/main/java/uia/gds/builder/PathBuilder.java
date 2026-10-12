@@ -9,9 +9,7 @@ import com.ohrasys.cad.gds.GDSLayerRecord;
 import com.ohrasys.cad.gds.GDSPathRecord;
 import com.ohrasys.cad.gds.GDSRecord;
 import com.ohrasys.cad.gds.GDSRecordException;
-import com.ohrasys.cad.gds.GDSWidthRecord;
 import com.ohrasys.cad.gds.GDSXyRecord;
-import com.ohrasys.cad.gds.dao.Path;
 
 /**
  * https://jupiter.math.nycu.edu.tw/~weng/courses/IC_2007/PROJECT_NCTU_MATH/CELL_LAYOUT/The%20GDSII%20Stream%20Format.htm
@@ -32,18 +30,11 @@ import com.ohrasys.cad.gds.dao.Path;
  */
 public class PathBuilder implements GraphBuilder {
 
-    private Point[] pts;
+    private final Point[] pts;
 
-    private short layer;
-
-    private Integer width;
+    private final short layer;
 
     private Rectangle rect;
-
-    public PathBuilder(Path path) {
-        this.pts = path.getPoints();
-        this.layer = (short) path.getLayer();
-    }
 
     /**
      * Create a path.
@@ -67,19 +58,13 @@ public class PathBuilder implements GraphBuilder {
         this.rect = new Rectangle(minX, minY, maxX - minX, maxY - minY);
     }
 
-    /**
-     * Creates a circular path.
-     * @param cx
-     * @param cy
-     * @param width
-     * @param layer
-     */
-    public PathBuilder(int cx, int cy, int width, short layer) {
-        this.pts = new Point[1];
-        this.pts[0] = new Point(cx, cy);
-        this.layer = layer;
-        this.width = width;
-        this.rect = new Rectangle(cx - width / 2, cy - width / 2, width, width);
+    public Point[] getPts() {
+        return this.pts;
+    }
+
+    @Override
+    public short getLayer() {
+        return this.layer;
     }
 
     @Override
@@ -89,25 +74,12 @@ public class PathBuilder implements GraphBuilder {
 
     @Override
     public GDSRecord[] records() throws GDSRecordException {
-        if (this.width == null) {
-            return new GDSRecord[] {
-                    new GDSPathRecord(),
-                    new GDSLayerRecord(this.layer),
-                    new GDSDatatypeRecord(GDSRecord.SHORT_TYPE),
-                    new GDSXyRecord(this.pts),
-                    new GDSEndelRecord()
-            };
-        }
-        else {
-            return new GDSRecord[] {
-                    new GDSPathRecord(),
-                    new GDSLayerRecord(this.layer),
-                    new GDSDatatypeRecord(GDSRecord.SHORT_TYPE),
-                    new GDSWidthRecord(this.width),
-                    new GDSXyRecord(this.pts),
-                    new GDSEndelRecord()
-            };
-
-        }
+        return new GDSRecord[] {
+                new GDSPathRecord(),
+                new GDSLayerRecord(this.layer),
+                new GDSDatatypeRecord(GDSRecord.SHORT_TYPE),
+                new GDSXyRecord(this.pts),
+                new GDSEndelRecord()
+        };
     }
 }

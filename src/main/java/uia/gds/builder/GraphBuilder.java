@@ -7,6 +7,8 @@ import com.ohrasys.cad.gds.GDSRecordException;
 
 public interface GraphBuilder {
 
+    public short getLayer();
+
     public Rectangle getRect();
 
     public GDSRecord[] records() throws GDSRecordException;

@@ -24,14 +24,14 @@ import com.ohrasys.cad.gds.GDSXyRecord;
  */
 public class BoxBuilder implements GraphBuilder {
 
-    private Point[] points;
+    private Point[] pts;
 
     private Rectangle rect;
 
     private short layer;
 
     public BoxBuilder(int x, int y, int w, int h, short layer) {
-        this.points = new Point[] {
+        this.pts = new Point[] {
                 new Point(x, y),
                 new Point(x + w, y),
                 new Point(x + w, y + h),
@@ -42,7 +42,7 @@ public class BoxBuilder implements GraphBuilder {
     }
 
     public BoxBuilder(int x, int y, int w, int h, short layer, int scale) {
-        this.points = new Point[] {
+        this.pts = new Point[] {
                 new Point(x * scale, y * scale),
                 new Point((x + w) * scale, y * scale),
                 new Point((x + w) * scale, (y + h) * scale),
@@ -50,6 +50,15 @@ public class BoxBuilder implements GraphBuilder {
         };
         this.rect = new Rectangle(x * scale, y * scale, (x + w) * scale, (y + h) * scale);
         this.layer = layer;
+    }
+
+    public Point[] getPts() {
+        return this.pts;
+    }
+
+    @Override
+    public short getLayer() {
+        return this.layer;
     }
 
     @Override
@@ -63,7 +72,7 @@ public class BoxBuilder implements GraphBuilder {
                 new GDSBoxRecord(),
                 new GDSLayerRecord(this.layer),
                 new GDSBoxtypeRecord(GDSRecord.INT_TYPE),
-                new GDSXyRecord(this.points),
+                new GDSXyRecord(this.pts),
                 new GDSEndelRecord()
         };
     }

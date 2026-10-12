@@ -65,6 +65,15 @@ public class BoundaryBuilder implements GraphBuilder {
         this.rect = new Rectangle(minX, minY, maxX - minX, maxY - minY);
     }
 
+    public Point[] getPts() {
+        return this.pts;
+    }
+
+    @Override
+    public short getLayer() {
+        return this.layer;
+    }
+
     @Override
     public Rectangle getRect() {
         return this.rect;

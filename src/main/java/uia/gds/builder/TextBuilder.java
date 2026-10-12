@@ -48,6 +48,10 @@ public class TextBuilder implements ElementBuilder {
         this.layer = layer;
     }
 
+    public short getLayer() {
+        return this.layer;
+    }
+
     @Override
     public GDSRecord[] records() throws GDSRecordException {
         return new GDSRecord[] {

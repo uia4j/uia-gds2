@@ -60,6 +60,15 @@ public class CircleBuilder implements GraphBuilder {
         return this.center;
     }
 
+    public int getRadius() {
+        return this.radius;
+    }
+
+    @Override
+    public short getLayer() {
+        return this.layer;
+    }
+
     @Override
     public Rectangle getRect() {
         return this.rect;
